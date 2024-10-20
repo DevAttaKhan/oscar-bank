@@ -1,10 +1,10 @@
-import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import * as path from 'path';
-import { registerAs } from '@nestjs/config';
+import { ConfigModule, registerAs } from '@nestjs/config';
+import { DataSourceOptions } from 'typeorm';
 
 export default registerAs(
   'dbconfig.dev',
-  (): PostgresConnectionOptions => ({
+  (): DataSourceOptions => ({
     type: 'postgres',
     database: process.env.DATABASE_NAME,
     host: process.env.DATABASE_URL,

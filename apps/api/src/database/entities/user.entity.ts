@@ -1,25 +1,21 @@
 import { UserStatus, UserType } from '@/common/constants/common.enum';
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-  DeleteDateColumn,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, ManyToMany, JoinTable, OneToOne } from 'typeorm';
+import { Group } from './group.entity';
+import { Customer } from './customer.entity';
+import { Employee } from './employee.entity';
 
 @Entity('users') // Specifies the table name 'users'
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true })
+  @Column({ unique: true, nullable: true })
   username: string;
 
   @Column({ unique: true })
   email: string;
 
-  @Column()
+  @Column({ nullable: true })
   passwordHash: string;
 
   @Column({ length: 50, unique: true })
@@ -97,4 +93,14 @@ export class User {
 
   @Column({ nullable: true })
   lastLogin: Date;
+
+  @ManyToMany(() => Group, (group) => group.users)
+  @JoinTable({ name: 'user_groups' })
+  groups: Group[];
+
+  @OneToOne(() => Customer, (customer) => customer.user)
+  customer: Customer;
+
+  @OneToOne(() => Employee, (employee) => employee.user)
+  employee: Employee;
 }
