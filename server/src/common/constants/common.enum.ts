@@ -64,6 +64,14 @@ export enum TransactionStatus {
   REVERSED = 'Reversed',
 }
 
+export enum CardStatus {
+  ACTIVE = 'Active',
+  INACTIVE = 'Inactive',
+  LOST = 'Lost',
+  STOLEN = 'Stolen',
+  SUSPENDED = 'Suspended',
+}
+
 export enum Permissions {
   // Users
   USERS_CREATE = 'users:create',

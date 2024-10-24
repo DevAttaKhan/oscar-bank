@@ -1,8 +1,9 @@
 import { UserStatus, UserType } from '@/common/constants/common.enum';
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, ManyToMany, JoinTable, OneToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, ManyToMany, JoinTable, OneToOne, OneToMany } from 'typeorm';
 import { Group } from './group.entity';
 import { Customer } from './customer.entity';
 import { Employee } from './employee.entity';
+import { Card } from './card.entity';
 
 @Entity('users') // Specifies the table name 'users'
 export class User {
@@ -103,4 +104,7 @@ export class User {
 
   @OneToOne(() => Employee, (employee) => employee.user)
   employee: Employee;
+
+  @OneToMany(() => Card, (card) => card.cardHolder)
+  cards: Card[];
 }

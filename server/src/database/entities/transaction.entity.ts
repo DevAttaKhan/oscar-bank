@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { Account } from './account.entity';
 import { Employee } from './employee.entity';
 import { TransactionType } from './transaction-type.entity';
@@ -29,7 +29,7 @@ export class Transaction {
   @JoinColumn()
   toAccount?: Account;
 
-  @ManyToOne(() => Employee, { nullable: false })
+  @ManyToOne(() => Employee, { nullable: true })
   @JoinColumn()
   teller: Employee;
 
@@ -55,9 +55,9 @@ export class Transaction {
   @Column({ nullable: true })
   transactionLocation?: string;
 
-  @Column()
+  @CreateDateColumn()
   createdAt: Date;
 
-  @Column()
+  @UpdateDateColumn()
   updatedAt: Date;
 }

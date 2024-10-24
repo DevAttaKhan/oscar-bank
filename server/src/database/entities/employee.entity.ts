@@ -3,6 +3,7 @@ import { User } from './user.entity';
 import { EmploymentStatus, EmploymentType, PerformanceRating } from '@/common/constants/common.enum';
 import { Designation } from './designation.entity';
 import { Branch } from './branch.entity';
+import { Transaction } from './transaction.entity';
 
 @Entity('employees')
 export class Employee {
@@ -63,4 +64,7 @@ export class Employee {
   @ManyToOne(() => Branch)
   @JoinColumn()
   assignedBranch: Branch;
+
+  @OneToMany(() => Transaction, (transaction) => transaction.teller)
+  transactions: Transaction[];
 }
