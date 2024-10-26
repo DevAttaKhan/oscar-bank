@@ -1,9 +1,10 @@
 import { UserStatus, UserType } from '@/common/constants/common.enum';
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, ManyToMany, JoinTable, OneToOne, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, ManyToMany, JoinTable, OneToOne, OneToMany, BeforeInsert } from 'typeorm';
 import { Group } from './group.entity';
 import { Customer } from './customer.entity';
 import { Employee } from './employee.entity';
 import { Card } from './card.entity';
+import * as bc from 'bcrypt';
 
 @Entity('users') // Specifies the table name 'users'
 export class User {
@@ -17,12 +18,12 @@ export class User {
   email: string;
 
   @Column({ nullable: true })
-  passwordHash: string;
+  password: string;
 
   @Column({ length: 50, unique: true })
   phone: string;
 
-  @Column({ type: 'enum', enum: UserType })
+  @Column({ type: 'enum', enum: UserType, nullable: true })
   userType: UserType;
 
   @Column({ length: 255 })
@@ -83,10 +84,10 @@ export class User {
   @Column({ nullable: true })
   userGroupId: number; // Foreign key, assume you'll create a relationship later
 
-  @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
+  @UpdateDateColumn()
   updatedAt: Date;
 
   @DeleteDateColumn({ nullable: true })
@@ -95,16 +96,21 @@ export class User {
   @Column({ nullable: true })
   lastLogin: Date;
 
-  @ManyToMany(() => Group, (group) => group.users)
+  @ManyToMany(() => Group, (group) => group.users, { nullable: true })
   @JoinTable({ name: 'user_groups' })
   groups: Group[];
 
-  @OneToOne(() => Customer, (customer) => customer.user)
+  @OneToOne(() => Customer, (customer) => customer.user, { nullable: true })
   customer: Customer;
 
-  @OneToOne(() => Employee, (employee) => employee.user)
+  @OneToOne(() => Employee, (employee) => employee.user, { nullable: true })
   employee: Employee;
 
-  @OneToMany(() => Card, (card) => card.cardHolder)
+  @OneToMany(() => Card, (card) => card.cardHolder, { nullable: true })
   cards: Card[];
+
+  @BeforeInsert()
+  async hashPassword() {
+    this.password = await bc.hash(this.password, 10);
+  }
 }
