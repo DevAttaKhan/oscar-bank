@@ -9,11 +9,12 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
+        background: "#F5F7FA",
         foreground: "var(--foreground)",
         surface: "#F5F7FA",
         dash_gray: "#718EBF",
         dash_red: "#FE5C73",
+        dash_blac: "#232323",
       },
     },
   },
