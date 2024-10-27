@@ -1,8 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
+import { SetPermissions } from '@/common/decorators/permissions.decorator';
+import { Permissions } from '@/common/constants/common.enum';
+import { User } from '@/common/decorators/current-user.decorator';
+import { IUserFlattenedPermissions } from '@/common/interfaces/user.interface';
 
 @Controller('user')
 export class UserController {
@@ -13,9 +17,10 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
+  @SetPermissions(Permissions.USERS_READ)
   @UseGuards(JwtAuthGuard)
   @Get()
-  findAll() {
+  findAll(@User() user: IUserFlattenedPermissions) {
     return this.userService.findAll();
   }
 
