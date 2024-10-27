@@ -17,7 +17,7 @@ export class AuthService {
 
   async validateUser(email: string, password: string) {
     // find user if registered in db
-    const user = await this.userService.findByEmail(email, ['groups', 'groups.permissions']);
+    const user = await this.userService.findOne({ email }, ['groups', 'groups.permissions']);
     // if not trow 401 exception
     if (!user) throw new UnauthorizedException('user not found');
 
@@ -37,6 +37,15 @@ export class AuthService {
       refreshToken,
       user,
     };
+  }
+
+  async validateJwtUser(id: number) {
+    //find user with the extracted id from jwt token
+    const user = await this.userService.findOne({ id }, ['groups', 'groups.permissions']);
+    // if no user found throw 401 exception
+    if (!user) throw new UnauthorizedException('user not found');
+
+    return mergePermissions(user);
   }
 
   async generateTokens(user: IUserFlattenedPermissions) {

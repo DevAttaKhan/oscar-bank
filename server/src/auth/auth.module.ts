@@ -10,6 +10,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '@/database/entities/user.entity';
 import { ConfigModule } from '@nestjs/config';
 import { jwtRefresh } from './config/refresh-jwt.config';
+import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
   imports: [
@@ -20,6 +21,6 @@ import { jwtRefresh } from './config/refresh-jwt.config';
     ConfigModule.forFeature(jwtRefresh),
   ],
   controllers: [AuthController],
-  providers: [AuthService, UserService, LocalStrategy],
+  providers: [AuthService, UserService, LocalStrategy, JwtStrategy],
 })
 export class AuthModule {}

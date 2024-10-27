@@ -6,7 +6,7 @@ export const jwtConfig = registerAs(
   (): JwtModuleOptions => ({
     secret: process.env.JWT_SECRET,
     signOptions: {
-      expiresIn: '15m',
+      expiresIn: '15s',
     },
   }),
 );
