@@ -1,4 +1,4 @@
-import { IUserFlattenedPermissions } from '@/common/interfaces/user.interface';
+import { IUserFlattenedPermissions, JwtAuthPayload } from '@/common/interfaces/user.interface';
 import { mergePermissions } from '@/common/util/common.util';
 import { UserService } from '@/user/user.service';
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
@@ -48,7 +48,7 @@ export class AuthService {
     return mergePermissions(user);
   }
 
-  async generateTokens(user: IUserFlattenedPermissions) {
+  async generateTokens(user: IUserFlattenedPermissions | JwtAuthPayload) {
     const payload = {
       sub: {
         id: user.id,
@@ -65,5 +65,9 @@ export class AuthService {
       token,
       refreshToken,
     };
+  }
+
+  refreshToken(payload: JwtAuthPayload) {
+    return this.generateTokens(payload);
   }
 }
