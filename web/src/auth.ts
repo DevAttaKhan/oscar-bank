@@ -16,6 +16,7 @@ const redirectPaths = {
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   secret: process.env.AUTH_SECRET,
+
   providers: [
     Credentials({
       credentials: {
@@ -23,21 +24,24 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: {},
       },
       authorize: async (credentials): Promise<any> => {
-        const res = await AuthService.loginUser(credentials);
-        console.log("auth", res);
-        if (res.statusCode !== 200 || !res) return null;
-        console.log("auth ==============>");
+        try {
+          const res = await AuthService.loginUser(credentials);
+          if (res.statusCode !== 200 || !res) return null;
 
-        const data = res as ILoginResponse;
+          const data = res as ILoginResponse;
 
-        const authSession: IAuthSession = {
-          ...data.result.user,
-          token: data?.result.token,
-          refreshToken: data?.result.refreshToken,
-        };
-        return authSession;
+          const authSession: IAuthSession = {
+            ...data.result.user,
+            token: data?.result.token,
+            refreshToken: data?.result.refreshToken,
+          };
+          return authSession;
+        } catch (error: any) {
+          console.log("catch", error.message);
+          return null;
+        }
       },
-    }) || null,
+    }),
   ],
 
   callbacks: {
@@ -58,7 +62,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return session;
     },
     async signIn({ user }) {
-      console.log({ user });
       return redirectPaths[user.userType];
     },
   },

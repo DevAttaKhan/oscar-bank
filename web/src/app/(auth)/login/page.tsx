@@ -7,8 +7,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginFromSchema, LoginFromSchemaType } from "@/lib/schema/auth.schema";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import { useState } from "react";
+import { Spinner } from "@/components/ui";
 
 const LoginPage: React.FC = () => {
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const {
     register,
@@ -20,17 +24,19 @@ const LoginPage: React.FC = () => {
 
   const onSubmit = async (values: LoginFromSchemaType) => {
     try {
+      setLoading(true);
       const res = await signIn("credentials", { ...values, redirect: false });
-      console.log({ res });
 
       if (!res || res?.error) {
         throw new Error("Not Authorized");
       }
       if (res.url) {
+        setLoading(false);
         router.push(res.url);
       }
     } catch (error: any) {
-      console.log(error.message);
+      toast.error(error.message);
+      setLoading(false);
     }
   };
 
@@ -62,7 +68,7 @@ const LoginPage: React.FC = () => {
         />
 
         <button className=" bg-blue-500 text-white w-full py-2 rounded-lg mb-4">
-          Continue
+          {loading ? <Spinner classNames="w-6 bg-white p-1" /> : "Continue"}
         </button>
 
         <p className="text-sm text-center text-dash_black">
