@@ -1,5 +1,17 @@
 import { UserStatus, UserType } from '@/common/constants/common.enum';
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, ManyToMany, JoinTable, OneToOne, OneToMany, BeforeInsert } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+  ManyToMany,
+  JoinTable,
+  OneToOne,
+  OneToMany,
+  BeforeInsert,
+} from 'typeorm';
 import { Group } from './group.entity';
 import { Customer } from './customer.entity';
 import { Employee } from './employee.entity';
@@ -23,7 +35,7 @@ export class User {
   @Column({ length: 50, unique: true })
   phone: string;
 
-  @Column({ type: 'enum', enum: UserType, nullable: true })
+  @Column({ type: 'enum', enum: UserType, nullable: true, default: UserType.ADMIN })
   userType: UserType;
 
   @Column({ length: 255 })

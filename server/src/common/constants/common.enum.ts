@@ -1,6 +1,7 @@
 export enum UserType {
   CUSTOMER = 'Customer',
   EMPLOYEE = 'Employee',
+  ADMIN = 'ADMIN',
 }
 
 export enum UserStatus {

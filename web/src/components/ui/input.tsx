@@ -81,7 +81,7 @@ export const Input = forwardRef(
           />
           {renderEyeButton()}
         </div>
-        <small className="text-dash_red ml-1">{error}</small>
+        {error && <small className="text-dash_red ml-1">{error}</small>}
       </div>
     );
   }

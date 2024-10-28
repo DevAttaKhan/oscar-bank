@@ -15,6 +15,7 @@ class User {
   @Expose()
   phone: string;
 
+  @Expose()
   userType: any;
 
   @Expose()
