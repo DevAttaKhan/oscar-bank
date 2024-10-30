@@ -23,3 +23,24 @@
     transform: rotate(1turn);
   }
 }
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent;
+  outline: none;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 rounded;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-400;
+}

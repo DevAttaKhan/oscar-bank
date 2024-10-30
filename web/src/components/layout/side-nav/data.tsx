@@ -4,7 +4,7 @@ import { icons } from "lucide-react";
 export interface NavItem {
   label: string; // Display name for the route
   route: string; // Route path
-  pattern?: string;
+  exact?: boolean;
   icon?: keyof typeof icons; // Optional icon name or path
   children?: NavItem[]; // Optional sub-items for nesting
   roles?: string[]; // Optional array of roles allowed to view this item
@@ -16,18 +16,50 @@ export const sidebarConfig: Record<string, NavItem[]> = {
       label: "Dashboard",
       route: "/admin",
       icon: "Grid2x2",
-    },
-    {
-      label: "Branches",
-      route: "/admin/branches",
-      pattern: "/admin/branches/*",
-      icon: "HousePlus",
+      exact: true,
     },
     {
       label: "User Management",
-      route: "/super-admin/users",
+      route: "/admin/users",
       icon: "UserRound",
+      children: [
+        {
+          label: "Users List",
+          route: "/admin/users/all",
+          icon: "Dot",
+        },
+        {
+          label: "Create User",
+          route: "/admin/users/upsert",
+          icon: "Dot",
+        },
+        {
+          label: "Permission Groups",
+          route: "/admin/users/groups",
+          icon: "Dot",
+        },
+      ],
     },
+    {
+      label: "Branch Management",
+      route: "/admin/branches",
+      icon: "HousePlus",
+      children: [
+        {
+          label: "All Branches",
+          route: "/admin/branches/all",
+          exact: true,
+          icon: "Dot",
+        },
+        {
+          label: "Create Branch",
+          route: "/admin/branches/create",
+          exact: true,
+          icon: "Dot",
+        },
+      ],
+    },
+
     {
       label: "Settings",
       route: "/super-admin/settings",
