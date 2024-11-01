@@ -75,7 +75,10 @@ export const Input = forwardRef(
             onChange={onChange}
             className={cn(
               `w-full text-xs font-medium py-2 px-2 rounded-md border outline-none focus:border-dash_red `,
-              inputClassName
+              inputClassName,
+              {
+                "border-dash_red": !!error,
+              }
             )}
             {...rest}
           />

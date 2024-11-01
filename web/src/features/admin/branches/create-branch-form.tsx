@@ -6,9 +6,15 @@ import {
   CreateBranchSchema,
 } from "@/lib/schema/branches.schema";
 import { CREATE_BRANCH_FORM_FIELDS } from "./data";
-import { Input } from "@/components/ui";
-
+import { Input, SelectDropdown, Spinner } from "@/components/ui";
+import Button from "@/components/ui/button";
+import { useEffect, useMemo, useState } from "react";
+import { GetCountries, GetState, GetCity } from "react-country-state-city";
+import { Option } from "@/interfaces/types";
 export const CreateBranchForm: React.FC = () => {
+  const [countries, setCountries] = useState<
+    Awaited<ReturnType<typeof GetCountries>>
+  >([]);
   const {
     register,
     handleSubmit,
@@ -17,24 +23,31 @@ export const CreateBranchForm: React.FC = () => {
     resolver: zodResolver(CreateBranchSchema),
   });
 
-  const onSubmit = (data: CreateBranchInputType) => {
-    console.log(data);
+  const onSubmit = async (data: CreateBranchInputType) => {
+    // console.log(data);
     // Handle form submission here
   };
 
+  useEffect(() => {
+    (async () => {
+      const c = await GetCountries();
+      setCountries(c);
+    })();
+  }, []);
+
   return (
-    <div className="bg-white rounded px-4 py-5 shadow">
-      <h2>Add New Branch</h2>
-      <p className="description">
-        Fill out the details below to add a new branch to the system. Ensure all
-        information is accurate before submission.
-      </p>
+    <div className="">
+      <h2 className="text-xl font-semibold mb-2">Add New Branch</h2>
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="grid grid-cols-[1fr_1fr] gap-4"
+        className="grid grid-cols-[1fr_1fr] gap-4 bg-white rounded-lg px-5 py-9 shadow"
       >
-        {CREATE_BRANCH_FORM_FIELDS.map((input) => {
+        {CREATE_BRANCH_FORM_FIELDS(
+          countries,
+          [{ id: 1, value: "value" }],
+          [{ id: 1, value: "value" }]
+        ).map((input) => {
           if (input.type !== "dropdown") {
             return (
               <Input
@@ -49,10 +62,22 @@ export const CreateBranchForm: React.FC = () => {
               />
             );
           }
+          if (input.type === "dropdown") {
+            return (
+              <SelectDropdown
+                key={input.name}
+                label={input.label}
+                placeholder={input.placeholder}
+                onChange={() => {}}
+                options={input.options as Option[]}
+                accessorKey="name"
+              />
+            );
+          }
         })}
-        <button type="submit" className="submit-button">
-          Add Branch
-        </button>
+        <Button className="col-span-full mt-5" type="submit">
+          {false ? <Spinner classNames="w-6 bg-white p-1" /> : "Create Branch"}
+        </Button>
       </form>
     </div>
   );

@@ -59,7 +59,14 @@ export const SideNav: React.FC<SideNavProps> = ({ navItems }) => {
                       <Link
                         key={c.label}
                         href={c.route}
-                        className="flex items-center w-full pl-8 py-2 text-xs hover:text-blue-500  "
+                        className={cn(
+                          "flex items-center w-full pl-8 py-2 text-xs hover:text-blue-500 ",
+                          [
+                            isPathMatched(locationPathName, c.route, c.exact)
+                              ? "text-blue-500 "
+                              : "text-gray-600",
+                          ]
+                        )}
                       >
                         <Lucide
                           name={c.icon as any}
