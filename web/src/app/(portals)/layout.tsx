@@ -7,7 +7,7 @@ export default function PortalLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div>
+    <div className="pt-16">
       <SideNav navItems={sidebarConfig.admin} />
       <div className="w-[calc(100vw_-_256px)] ml-auto ">
         <Topbar title="Overview" userImageUrl="/images/cards.logo.png" />

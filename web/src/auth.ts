@@ -2,17 +2,7 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { copyPropertiesToTarget } from "@/lib/utils/auth.util";
 import { AuthService } from "./services/auth.service";
-import {
-  IAuthSession,
-  ILoginResponse,
-  UserType,
-} from "./interfaces/user.interface";
-
-const redirectPaths = {
-  [UserType.ADMIN]: "/admin",
-  [UserType.EMPLOYEE]: "/internal",
-  [UserType.CUSTOMER]: "/dashboard",
-};
+import { IAuthSession, ILoginResponse } from "./interfaces/user.interface";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   secret: process.env.AUTH_SECRET,
@@ -37,7 +27,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           };
           return authSession;
         } catch (error: any) {
-          console.log("catch", error.message);
           return null;
         }
       },
@@ -49,7 +38,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (trigger === "update") {
         copyPropertiesToTarget(token, session);
       }
-
       if (user) {
         copyPropertiesToTarget(token, user);
       }
@@ -60,9 +48,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         copyPropertiesToTarget(session.user, token);
       }
       return session;
-    },
-    async signIn({ user }) {
-      return redirectPaths[user.userType];
     },
   },
 

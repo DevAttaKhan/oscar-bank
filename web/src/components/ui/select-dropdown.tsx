@@ -1,4 +1,5 @@
-import { Fragment, SetStateAction, useState } from "react";
+"use client";
+import { Fragment, useState } from "react";
 import { Option } from "@/interfaces/types";
 import {
   Listbox,
@@ -8,6 +9,7 @@ import {
   Transition,
 } from "@headlessui/react";
 import cn from "classnames";
+import { Lucide } from "../common";
 type Props = {
   options?: Option[] | [];
   value?: Option;
@@ -55,7 +57,7 @@ export const SelectDropdown: React.FC<Props> = ({
       <Listbox value={selectedValue} onChange={handleChange}>
         <ListboxButton
           className={cn(
-            `w-full text-left text-slate-400 capitalize text-xs font-medium py-2 px-2 rounded-md border outline-none focus:border-dash_red `,
+            `flex justify-between items-center w-full text-left  capitalize text-xs font-medium py-2 px-2 rounded-md border outline-none focus:border-dash_red `,
             buttonClassName,
             {
               "border-dash_red": !!error,
@@ -64,8 +66,11 @@ export const SelectDropdown: React.FC<Props> = ({
         >
           {(selectedValue && selectedValue[accessorKey as string]) ||
             selectedValue?.value ||
-            placeholder}
+            placeholder}{" "}
+          <Lucide name="ChevronDown" size={16} />
         </ListboxButton>
+
+        {error && <small className="text-dash_red">{error}</small>}
 
         <Transition
           as={Fragment}
@@ -86,7 +91,7 @@ export const SelectDropdown: React.FC<Props> = ({
               <ListboxOption
                 key={el.id}
                 value={el}
-                className="w-full hover:bg-gray-200 items-center gap-2 rounded-lg py-1.5 px-3  cursor-pointer"
+                className="w-full text-sm hover:bg-gray-200 items-center gap-2 rounded-lg py-1.5 px-3  cursor-pointer"
               >
                 {el[accessorKey as string] || el.value}
               </ListboxOption>

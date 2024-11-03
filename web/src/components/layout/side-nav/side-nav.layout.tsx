@@ -25,7 +25,7 @@ export const SideNav: React.FC<SideNavProps> = ({ navItems }) => {
     <aside className="w-64 h-screen fixed left-0 top-0 bg-white border border-r flex flex-col items-center pt-6">
       <Link href="#" className="flex items-center gap-2 mb-8">
         <Image src="/images/cards.logo.png" alt="logo" width={36} height={36} />
-        <h1 className="text-xl font-semibold text-blue-600">Oscar Band</h1>
+        <h1 className="text-xl font-semibold text-blue-600">Oscar Bank</h1>
       </Link>
       <nav className="w-full px-2 text-sm">
         {navItems.map((item, i) => {

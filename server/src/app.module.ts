@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import dbConfig from '@/database/config/db.local.config';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import { BranchModule } from './branch/branch.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { HttpExceptionFilter } from './common/filters/http-exception.filter';
     DatabaseModule,
     UserModule,
     AuthModule,
+    BranchModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_FILTER, useClass: HttpExceptionFilter }],

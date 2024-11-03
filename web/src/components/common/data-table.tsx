@@ -103,61 +103,54 @@ export function DataTable<TData, TValue>({
   }, [setTable, table]);
 
   return (
-    <div>
-      {data.length > 0 ? (
-        <div className={` ${tableClass} table`}>
-          <div className="thead">
-            {table.getHeaderGroups().map((headerGroup) => (
-              <div className={`tr  ${headRowClass}`} key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <div className="th " key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </div>
-                  );
-                })}
-              </div>
-            ))}
-          </div>
-          <div className="tbody">
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <div
-                  className={`tr  ${bodyRowClass}`}
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <div className="td  " key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </div>
-                  ))}
-                </div>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={columns.length} className="h-24 text-center">
-                  No results.
-                </td>
+    <div className="bg-white rounded-lg overflow-auto md:py-6 md:px-8">
+      <table>
+        <thead>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header) => {
+                return (
+                  <th key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </th>
+                );
+              })}
+            </tr>
+          ))}
+        </thead>
+        <tbody>
+          {table.getRowModel().rows?.length ? (
+            table.getRowModel().rows.map((row) => (
+              <tr key={row.id} data-state={row.getIsSelected() && "selected"}>
+                {row.getVisibleCells().map((cell) => (
+                  <td key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
               </tr>
-            )}
-          </div>
-        </div>
-      ) : (
-        <h1>no data fallback</h1>
-      )}
+            ))
+          ) : (
+            <tr>
+              <td colSpan={columns.length} className="h-24 text-center">
+                No results.
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
 
-      <div className="flex flex-col sm:flex-row  justify-between items-center pt-4">
-        {/* {meta && <DataTablePagination meta={meta} gotoPage={gotoPage} />} */}
-      </div>
+      {/* <div className="flex justify-end pt-4">
+      <DataTablePagination
+        table={table}
+        meta={meta}
+        gotoPage={gotoPage}
+      ></DataTablePagination>
+    </div> */}
     </div>
   );
 }

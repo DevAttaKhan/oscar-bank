@@ -22,21 +22,21 @@ export const CREATE_BRANCH_FORM_FIELDS = (
       label: "Country",
       name: "country",
       placeholder: "Enter country",
-      type: "dropdown",
+      type: "combobox",
       options: countryOptions,
     },
     {
       label: "State",
       name: "state",
       placeholder: "Enter state",
-      type: "dropdown",
+      type: "combobox",
       options: stateOptions,
     },
     {
       label: "City",
       name: "city",
       placeholder: "Enter city",
-      type: "dropdown",
+      type: "combobox",
       options: cityOptions,
     },
 
@@ -56,7 +56,7 @@ export const CREATE_BRANCH_FORM_FIELDS = (
       label: "Email",
       name: "email",
       placeholder: "Enter email address",
-      type: "email",
+      type: "text",
     },
     {
       type: "dropdown",

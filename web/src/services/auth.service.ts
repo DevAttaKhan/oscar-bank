@@ -11,7 +11,6 @@ export class AuthService {
       );
       return response;
     } catch (error: any) {
-      console.log("error service", error.message);
       return error.message;
     }
   }

@@ -31,7 +31,10 @@ export interface IUser {
   permissions: Permissions[];
 }
 
-export interface IAuthSession extends Omit<ILoginResult, "user">, IUser {}
+export interface IAuthSession extends Omit<ILoginResult, "user">, IUser {
+  token: string;
+  refreshToken: string;
+}
 
 export enum UserType {
   CUSTOMER = "Customer",

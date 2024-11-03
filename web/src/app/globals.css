@@ -7,7 +7,36 @@
   --foreground: #171717;
 }
 
-/* HTML: <div class="loader"></div> */
+/* Table Container */
+.table-container {
+  @apply p-4 bg-gray-50 rounded-lg shadow-md;
+}
+
+table {
+  @apply w-full text-left text-sm text-gray-600;
+}
+
+thead tr {
+  @apply border-b-2 border-gray-200;
+}
+thead th {
+  @apply p-2 font-semibold text-dash_gray capitalize;
+}
+
+tbody tr {
+  @apply cursor-pointer hover:bg-gray-50;
+}
+
+tbody tr:not(:last-child) {
+  @apply border-b;
+}
+tbody tr:first-child td {
+  @apply pt-4;
+}
+tbody td {
+  @apply p-2 py-3;
+}
+
 .loader {
   aspect-ratio: 1;
   border-radius: 50%;

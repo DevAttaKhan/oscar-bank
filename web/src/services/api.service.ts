@@ -1,4 +1,4 @@
-interface FetchOptions {
+export interface FetchOptions {
   headers?: HeadersInit;
   cache?: "force-cache" | "no-store";
   revalidate?: false | 0 | number;

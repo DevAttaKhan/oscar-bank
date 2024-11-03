@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginFromSchema, LoginFromSchemaType } from "@/lib/schema/auth.schema";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useState } from "react";
@@ -25,8 +25,11 @@ const LoginPage: React.FC = () => {
   const onSubmit = async (values: LoginFromSchemaType) => {
     try {
       setLoading(true);
-      const res = await signIn("credentials", { ...values, redirect: false });
-
+      const res = await signIn("credentials", {
+        ...values,
+        redirect: false,
+        callbackUrl: "/verify-user",
+      });
       if (!res || res?.error) {
         throw new Error("Not Authorized");
       }

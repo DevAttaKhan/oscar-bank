@@ -47,7 +47,7 @@ export const sidebarConfig: Record<string, NavItem[]> = {
       children: [
         {
           label: "All Branches",
-          route: "/admin/branches/all",
+          route: "/admin/branches",
           exact: true,
           icon: "Dot",
         },

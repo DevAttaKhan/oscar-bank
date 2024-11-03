@@ -102,6 +102,13 @@ export enum Permissions {
   ACCOUNTS_DELETE = 'accounts:delete',
   ACCOUNTS_LIST = 'accounts:list',
 
+  // BRANCHES
+  BRANCH_CREATE = 'branch:create',
+  BRANCH_READ = 'branch:read',
+  BRANCH_UPDATE = 'branch:update',
+  BRANCH_DELETE = 'branch:delete',
+  BRANCH_LIST = 'branch:list',
+
   // Transactions
   TRANSACTIONS_CREATE = 'transactions:create',
   TRANSACTIONS_READ = 'transactions:read',

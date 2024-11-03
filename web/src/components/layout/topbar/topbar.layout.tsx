@@ -16,7 +16,7 @@ export const Topbar: React.FC<Props> = ({
   userImageUrl,
 }) => {
   return (
-    <div className="flex items-center justify-between p-2 lg:py-3 lg:px-4 bg-white border-b">
+    <div className="flex items-center justify-between p-2 lg:py-3 lg:px-4 bg-white border-b fixed top-0 right-0 left-64">
       <h1 className="text-xl font-semibold text-gray-800">{title}</h1>
 
       <div className="flex items-center ">

@@ -1,6 +1,6 @@
 // Ref: https://next-auth.js.org/getting-started/typescript#module-augmentation
 
-import { IUser } from "@/interfaces/user.interface";
+import { IAuthSession, IUser } from "@/interfaces/user.interface";
 import { DefaultSession, DefaultUser } from "next-auth";
 import { JWT, DefaultJWT } from "next-auth/jwt";
 
