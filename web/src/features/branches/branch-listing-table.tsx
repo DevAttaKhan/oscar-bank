@@ -5,12 +5,13 @@ import { createBranchListColumns } from "./table-columns";
 import { IBranch } from "@/interfaces/branch.interface";
 import { ResponseMeta } from "@/interfaces/types";
 import { Lucide, PaginationControl } from "@/components/common";
-import { useUpdateSearchParams } from "@/hooks";
+import { useParamsNavigation } from "@/hooks";
 import { Input, SelectDropdown } from "@/components/ui";
 import { BRANCH_STATUS_OPTIONS } from "@/lib/constants/branch.constants";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Router } from "lucide-react";
 import Link from "next/link";
+import { Can } from "@/providers/ability.provider";
 
 type Props = {
   data: IBranch[];
@@ -19,7 +20,7 @@ type Props = {
 export const BranchListingTable: React.FC<Props> = ({ data, meta }) => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { navigateWithQueryParams, getParams } = useUpdateSearchParams();
+  const { navigateWithQueryParams, getParams } = useParamsNavigation();
   const handlePageChange = (page) => {
     const params = getParams();
     params.set("page", page);
@@ -50,12 +51,14 @@ export const BranchListingTable: React.FC<Props> = ({ data, meta }) => {
             options={BRANCH_STATUS_OPTIONS}
             className="w-full max-w-24 ml-auto"
           />
-          <Link
-            href={`/admin/branches/create`}
-            className="p-2 border rounded hover:bg-slate-100"
-          >
-            <Lucide name="Plus" size={16} />
-          </Link>
+          <Can I="list" a="branch">
+            <Link
+              href={`/admin/branches/create`}
+              className="p-2 border rounded hover:bg-slate-100"
+            >
+              <Lucide name="Plus" size={16} />
+            </Link>
+          </Can>
         </div>
       </div>
       <DataTable columns={branchListColumns} data={data} />

@@ -82,14 +82,15 @@ export const SelectDropdown: React.FC<Props> = ({
           leaveTo="transform opacity-0 scale-95"
         >
           <ListboxOptions
+            key={1}
             anchor="bottom"
             className={cn(
               "w-[var(--button-width)] rounded-xl border bg-white p-1 [--anchor-gap:var(--spacing-1)] transition duration-100 ease-in data-[leave]:data-[closed]:opacity-0"
             )}
           >
-            {(options || []).map((el) => (
+            {(options || []).map((el, i) => (
               <ListboxOption
-                key={el.id}
+                key={el.id + i}
                 value={el}
                 className="w-full text-sm hover:bg-gray-200 items-center gap-2 rounded-lg py-1.5 px-3  cursor-pointer"
               >

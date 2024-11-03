@@ -1,3 +1,4 @@
+import { Permissions } from "@/interfaces/user.interface";
 import { icons } from "lucide-react";
 
 // nav.types.ts
@@ -7,7 +8,7 @@ export interface NavItem {
   exact?: boolean;
   icon?: keyof typeof icons; // Optional icon name or path
   children?: NavItem[]; // Optional sub-items for nesting
-  roles?: string[]; // Optional array of roles allowed to view this item
+  permissions?: Permissions[]; // Optional array of permissions allowed to view this item
 }
 
 export const sidebarConfig: Record<string, NavItem[]> = {
@@ -44,18 +45,21 @@ export const sidebarConfig: Record<string, NavItem[]> = {
       label: "Branch Management",
       route: "/admin/branches",
       icon: "HousePlus",
+      permissions: [Permissions.BRANCH_LIST, Permissions.BRANCH_CREATE],
       children: [
         {
           label: "All Branches",
           route: "/admin/branches",
           exact: true,
           icon: "Dot",
+          permissions: [Permissions.BRANCH_LIST],
         },
         {
           label: "Create Branch",
           route: "/admin/branches/create",
           exact: true,
           icon: "Dot",
+          permissions: [Permissions.BRANCH_CREATE],
         },
       ],
     },

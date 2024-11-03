@@ -1,1 +1,1 @@
-export * from "./use-update-searchparams";
+export * from "./use-param-navigation";

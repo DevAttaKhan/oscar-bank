@@ -14,13 +14,17 @@ import {
   Transition,
 } from "@headlessui/react";
 import { Fragment } from "react";
+import { useAppAbility } from "@/providers/ability.provider";
+import { hasAnyPermission } from "@/lib/utils/ability.util";
 
 interface SideNavProps {
   navItems: NavItem[];
 }
 
 export const SideNav: React.FC<SideNavProps> = ({ navItems }) => {
+  const ability = useAppAbility();
   const locationPathName = usePathname();
+
   return (
     <aside className="w-64 h-screen fixed left-0 top-0 bg-white border border-r flex flex-col items-center pt-6">
       <Link href="#" className="flex items-center gap-2 mb-8">
@@ -29,6 +33,7 @@ export const SideNav: React.FC<SideNavProps> = ({ navItems }) => {
       </Link>
       <nav className="w-full px-2 text-sm">
         {navItems.map((item, i) => {
+          if (!hasAnyPermission(ability, item?.permissions)) return null;
           if (item.children) {
             return (
               <Disclosure key={item.label}>
@@ -55,33 +60,35 @@ export const SideNav: React.FC<SideNavProps> = ({ navItems }) => {
                   leaveTo="max-h-0"
                 >
                   <DisclosurePanel transition className="overflow-hidden">
-                    {item.children.map((c) => (
-                      <Link
-                        key={c.label}
-                        href={c.route}
-                        className={cn(
-                          "flex items-center w-full pl-8 py-2 text-xs hover:text-blue-500 ",
-                          [
-                            isPathMatched(locationPathName, c.route, c.exact)
-                              ? "text-blue-500 "
-                              : "text-gray-600",
-                          ]
-                        )}
-                      >
-                        <Lucide
-                          name={c.icon as any}
-                          className="mr-2"
-                          size={16}
-                        />
-                        {c.label}
-                      </Link>
-                    ))}
+                    {item.children.map((c) => {
+                      return hasAnyPermission(ability, c.permissions) ? (
+                        <Link
+                          key={c.label}
+                          href={c.route}
+                          className={cn(
+                            "flex items-center w-full pl-8 py-2 text-xs hover:text-blue-500 ",
+                            [
+                              isPathMatched(locationPathName, c.route, c.exact)
+                                ? "text-blue-500 "
+                                : "text-gray-600",
+                            ]
+                          )}
+                        >
+                          <Lucide
+                            name={c.icon as any}
+                            className="mr-2"
+                            size={16}
+                          />
+                          {c.label}
+                        </Link>
+                      ) : null;
+                    })}
                   </DisclosurePanel>
                 </Transition>
               </Disclosure>
             );
           } else
-            return (
+            return hasAnyPermission(ability, item.permissions) ? (
               <NavLink
                 key={item.route}
                 href={item.route}
@@ -96,7 +103,7 @@ export const SideNav: React.FC<SideNavProps> = ({ navItems }) => {
                 <Lucide name={item.icon as any} className="mr-2" size={16} />
                 <span>{item.label}</span>
               </NavLink>
-            );
+            ) : null;
         })}
       </nav>
     </aside>
