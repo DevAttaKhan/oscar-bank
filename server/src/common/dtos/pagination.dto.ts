@@ -9,7 +9,7 @@ export class PaginationDto {
   @IsNumber()
   @Type(() => Number)
   @IsOptional()
-  limit?: number = 10;
+  limit?: number = 5;
 
   @IsString()
   @IsOptional()

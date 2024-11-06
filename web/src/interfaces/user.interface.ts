@@ -1,3 +1,12 @@
+import { Session } from "next-auth";
+import { UpdateSession } from "next-auth/react";
+
+export interface ClientSession {
+  update: UpdateSession;
+  data: Session;
+  status: "authenticated";
+}
+
 export interface ILoginResponse {
   status: boolean;
   path: string;
@@ -9,6 +18,16 @@ export interface ILoginResult {
   token: string;
   refreshToken: string;
   user: IUser;
+}
+
+export interface IRefreshToken {
+  status: boolean;
+  path: string;
+  statusCode: number;
+  result: {
+    token: string;
+    refreshToken: string;
+  };
 }
 
 export interface IUser {

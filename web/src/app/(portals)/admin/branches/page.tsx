@@ -1,5 +1,3 @@
-import { DataTable } from "@/components/common/data-table";
-import { createBranchListColumns } from "@/features/branches/table-columns";
 import { BranchService } from "@/services/branch.service";
 import { BranchListingTable } from "@/features/branches";
 import { IApiError, IApiResponse } from "@/interfaces/types";
@@ -8,9 +6,11 @@ import { auth } from "@/auth";
 
 const BranchesPage = async ({ params, searchParams }) => {
   const session = await auth();
-  const res = await BranchService.getAll(await searchParams, session?.user, [
-    "branches",
-  ]);
+
+  const res = await BranchService.list({
+    params: await searchParams,
+    token: session?.user.token,
+  });
 
   if (res.statusCode !== 200) {
     return <h1> {(res as IApiError).message} </h1>;

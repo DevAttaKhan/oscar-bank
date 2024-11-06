@@ -7,40 +7,36 @@ import { apiService } from "./api.service";
 import { CreateBranchInputType } from "@/lib/schema/branches.schema";
 import { IApiError, IApiResponse } from "@/interfaces/types";
 import { IBranch } from "@/interfaces/branch.interface";
+import { Session } from "next-auth";
+import { RequestConfig } from "@/interfaces/api.interface";
 export class BranchService {
   public static async createBranch(
     payload: CreateBranchInputType,
-    user?: IAuthSession
+    token?: string
   ): Promise<IApiResponse<IBranch> | IApiError> {
     try {
-      const headers = {
-        Authorization: `Bearer ${user?.token}`,
-      };
-      const response = await apiService.post<IApiResponse<IBranch>>(
-        "/branch",
-        payload,
-        { headers }
-      );
+      const response = await apiService.post<IApiResponse<IBranch>>({
+        endpoint: "/branch",
+        body: payload,
+        token,
+      });
       return response;
     } catch (error: any) {
       return error.message;
     }
   }
 
-  public static async getAll(
-    params,
-    user?: IAuthSession,
-    tags?: string[]
+  public static async list(
+    config: RequestConfig
   ): Promise<IApiResponse<IBranch> | IApiError> {
     try {
-      const headers = {
-        Authorization: `Bearer ${user?.token}`,
-      };
-      const response = await apiService.get<IApiResponse<IBranch>>(
-        "/branch",
+      const { params, options, token } = config;
+      const response = await apiService.get<IApiResponse<IBranch>>({
+        endpoint: "/branch",
         params,
-        { headers, tags }
-      );
+        options: options,
+        token,
+      });
       return response;
     } catch (error: any) {
       return error.message;

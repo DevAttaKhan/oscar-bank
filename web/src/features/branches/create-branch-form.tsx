@@ -39,7 +39,10 @@ export const CreateBranchForm: React.FC = () => {
       router.push("/admin/branches");
     },
 
-    onError: ({ error: { serverError, validationErrors } }) => {
+    onError: ({
+      error: { serverError, validationErrors, bindArgsValidationErrors },
+    }) => {
+      console.log(serverError, validationErrors, bindArgsValidationErrors);
       toast.update("saving-branch", {
         render: serverError,
         type: "error",
@@ -141,7 +144,12 @@ export const CreateBranchForm: React.FC = () => {
                 key={input.name}
                 label={input.label}
                 placeholder={input.placeholder}
-                onChange={(v) => handleDropdownChange(input.name, v)}
+                onChange={(v) =>
+                  setValue("status", v.value, {
+                    shouldValidate: true,
+                    shouldDirty: true,
+                  })
+                }
                 options={input.options as Option[]}
                 accessorKey="name"
                 error={

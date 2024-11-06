@@ -2,9 +2,15 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { copyPropertiesToTarget } from "@/lib/utils/auth.util";
 import { AuthService } from "./services/auth.service";
-import { IAuthSession, ILoginResponse } from "./interfaces/user.interface";
-
-export const { handlers, signIn, signOut, auth } = NextAuth({
+import {
+  IAuthSession,
+  ILoginResponse,
+  IRefreshToken,
+} from "./interfaces/user.interface";
+import { isExpired } from "react-jwt";
+import { IApiError } from "./interfaces/types";
+import { redirect } from "next/navigation";
+export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
   secret: process.env.AUTH_SECRET,
 
   providers: [
@@ -41,6 +47,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (user) {
         copyPropertiesToTarget(token, user);
       }
+
+      const isTokenExpired = isExpired(token.token);
+
+      if (isTokenExpired) {
+        const res = await AuthService.refreshToken(token.refreshToken);
+        if ((res as IApiError).statusCode !== 403)
+          copyPropertiesToTarget(token, {
+            token: (res as IRefreshToken).result.token,
+            refreshToken: (res as IRefreshToken).result.token,
+          });
+      }
+
       return token;
     },
     async session({ session, token }) {

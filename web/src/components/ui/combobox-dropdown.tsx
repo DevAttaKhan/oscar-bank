@@ -1,6 +1,7 @@
 "use client";
 import {
   Combobox,
+  ComboboxButton,
   ComboboxInput,
   ComboboxOption,
   ComboboxOptions,
@@ -77,11 +78,9 @@ export const ComboboxDropdown: React.FC<Props> = ({
             )}
             placeholder={placeholder || "Select an option"}
           />
-          <Lucide
-            name="ChevronDown"
-            size={16}
-            className="absolute  right-3 flex items-center pointer-events-none"
-          />
+          <ComboboxButton className="absolute  right-3 flex items-center p-2 cursor-pointer z-10">
+            <Lucide name="ChevronDown" size={16} />
+          </ComboboxButton>
         </div>
 
         {error && <small className="text-dash_red">{error}</small>}

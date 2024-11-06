@@ -1,9 +1,4 @@
-export interface FetchOptions {
-  headers?: HeadersInit;
-  cache?: "force-cache" | "no-store";
-  revalidate?: false | 0 | number;
-  tags?: string[];
-}
+import { IRequestOptions } from "@/interfaces/api.interface";
 
 class ApiService {
   private baseURL: string;
@@ -13,16 +8,14 @@ class ApiService {
   }
 
   // Generic request handler
-  private async request<T>(
-    endpoint: string,
-    method: string,
-    body?: object,
-    options?: FetchOptions
-  ): Promise<T> {
+  private async request<T>(config: IRequestOptions): Promise<T> {
+    const { endpoint, method, body, options, token } = config;
+
+    const headers = this.prepareAuthHeaders(token);
     const response = await fetch(`${this.baseURL}${endpoint}`, {
       method,
       headers: {
-        "Content-Type": "application/json",
+        ...headers,
         ...options?.headers,
       },
       body: body ? JSON.stringify(body) : undefined,
@@ -33,51 +26,46 @@ class ApiService {
       },
     });
 
-    // if (!response.ok) {
-    //   return { status: response.status, message: response.statusText };
-    // }
-
     return response.json() as Promise<T>;
   }
 
   // GET request
-  public get<T>(
-    endpoint: string,
-    params?: object,
-    options?: FetchOptions
-  ): Promise<T> {
-    const queryString = params
-      ? "?" + new URLSearchParams(params as any).toString()
-      : "";
-    return this.request<T>(
-      `${endpoint}${queryString}`,
-      "GET",
-      undefined,
-      options
-    );
+  public get<T>(config: Omit<IRequestOptions, "method">): Promise<T> {
+    const { endpoint, params, options, token } = config;
+
+    return this.request<T>({
+      endpoint: `${endpoint}?${new URLSearchParams(params as any)}`,
+      method: "GET",
+      options,
+      token,
+    });
   }
 
   // POST request
-  public post<T>(
-    endpoint: string,
-    data: object,
-    options?: FetchOptions
-  ): Promise<T> {
-    return this.request<T>(endpoint, "POST", data, options);
+  public post<T>(config: Omit<IRequestOptions, "method">): Promise<T> {
+    return this.request<T>({ ...config, method: "POST" });
   }
 
   // PUT request
-  public put<T>(
-    endpoint: string,
-    data: object,
-    options?: FetchOptions
-  ): Promise<T> {
-    return this.request<T>(endpoint, "PUT", data, options);
+  public put<T>(config: Omit<IRequestOptions, "method">): Promise<T> {
+    return this.request<T>({ ...config, method: "PUT" });
   }
 
   // DELETE request
-  public delete<T>(endpoint: string, options?: FetchOptions): Promise<T> {
-    return this.request<T>(endpoint, "DELETE", undefined, options);
+  public delete<T>(config: Omit<IRequestOptions, "method">): Promise<T> {
+    return this.request<T>({ ...config, method: "DELETE" });
+  }
+
+  public prepareAuthHeaders(token?: string): object {
+    if (token) {
+      return {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+    } else
+      return {
+        "Content-Type": "application/json",
+      };
   }
 }
 

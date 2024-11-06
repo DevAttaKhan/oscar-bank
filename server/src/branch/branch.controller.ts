@@ -23,6 +23,8 @@ export class BranchController {
     return this.branchService.create(createBranchDto);
   }
 
+  @SetPermissions(Permissions.BRANCH_CREATE)
+  @UseGuards(JwtAuthGuard)
   @Get()
   findAll(@Query() query: BranchQueryDto) {
     const filterOptions: PaginationOptions<Branch> = {
