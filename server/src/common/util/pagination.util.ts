@@ -1,14 +1,21 @@
-import { Repository, FindManyOptions, FindOptionsOrder } from 'typeorm';
+import { Repository, ILike } from 'typeorm';
 import { PaginatedResult, PaginationOptions } from '../interfaces/pagination.interface';
 
 export async function getPaginatedData<T extends Object>(
   repository: Repository<T>,
   options: PaginationOptions<T> = {},
 ): Promise<PaginatedResult<T>> {
-  const { page = 1, limit = 10, filters = {}, order, relations = [] } = options;
+  const { page = 1, limit = 10, filters = {}, order, relations = [], search, fields } = options;
 
+  const searchFilters =
+    search && fields
+      ? fields.split(',').reduce((acc, cur) => {
+          acc[cur] = ILike(`%${search}%`);
+          return acc;
+        }, {})
+      : undefined;
   const [data, totalItems] = await repository.findAndCount({
-    where: filters,
+    where: search ? { ...filters, ...searchFilters } : filters,
     take: limit,
     skip: (page - 1) * limit,
     relations,

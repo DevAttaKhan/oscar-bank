@@ -8,7 +8,7 @@ import {
 export const defineAbilityFor = (user: IAuthSession) => {
   const { can, build } = new AbilityBuilder(createMongoAbility);
 
-  user?.permissions.forEach((el) => {
+  user?.permissions?.forEach((el) => {
     const [subject, action] = el.split(":");
     can(action, subject);
   });

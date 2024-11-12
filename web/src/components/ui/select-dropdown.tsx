@@ -10,11 +10,13 @@ import {
 } from "@headlessui/react";
 import cn from "classnames";
 import { Lucide } from "../common";
+import { icons } from "lucide-react";
 type Props = {
   options?: Option[] | [];
   value?: Option;
   error?: string;
   label?: string;
+  icon?: keyof typeof icons;
   placeholder?: string;
   onChange: (value: any) => void;
   className?: string;
@@ -27,6 +29,7 @@ export const SelectDropdown: React.FC<Props> = ({
   options,
   label,
   placeholder,
+  icon = "ChevronDown",
   error,
   accessorKey,
   className,
@@ -67,7 +70,7 @@ export const SelectDropdown: React.FC<Props> = ({
           {(selectedValue && selectedValue[accessorKey as string]) ||
             selectedValue?.value ||
             placeholder}{" "}
-          <Lucide name="ChevronDown" size={16} />
+          <Lucide name={icon} size={16} />
         </ListboxButton>
 
         {error && <small className="text-dash_red">{error}</small>}

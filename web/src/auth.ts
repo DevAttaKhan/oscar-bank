@@ -9,7 +9,6 @@ import {
 } from "./interfaces/user.interface";
 import { isExpired } from "react-jwt";
 import { IApiError } from "./interfaces/types";
-import { redirect } from "next/navigation";
 export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
   secret: process.env.AUTH_SECRET,
 
@@ -33,6 +32,7 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
           };
           return authSession;
         } catch (error: any) {
+          console.log(error.message);
           return null;
         }
       },
@@ -40,7 +40,7 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
   ],
 
   callbacks: {
-    async jwt({ token, user, trigger, session, profile }) {
+    async jwt({ token, user, trigger, session }) {
       if (trigger === "update") {
         copyPropertiesToTarget(token, session);
       }

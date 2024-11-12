@@ -25,18 +25,13 @@ export const sidebarConfig: Record<string, NavItem[]> = {
       icon: "UserRound",
       children: [
         {
-          label: "Users List",
-          route: "/admin/users/all",
+          label: "Customeres",
+          route: "/admin/users/customers",
           icon: "Dot",
         },
         {
-          label: "Create User",
-          route: "/admin/users/upsert",
-          icon: "Dot",
-        },
-        {
-          label: "Permission Groups",
-          route: "/admin/users/groups",
+          label: "Employees",
+          route: "/admin/users/Employees",
           icon: "Dot",
         },
       ],
@@ -66,8 +61,18 @@ export const sidebarConfig: Record<string, NavItem[]> = {
 
     {
       label: "Settings",
-      route: "/super-admin/settings",
+      route: "/admin/settings",
       icon: "Settings",
+      permissions: [Permissions.GROUPS_MANAGE],
+      children: [
+        {
+          label: "Groups",
+          route: "/admin/settings/groups",
+          exact: true,
+          icon: "Dot",
+          permissions: [Permissions.GROUPS_MANAGE],
+        },
+      ],
     },
   ],
   internal: [

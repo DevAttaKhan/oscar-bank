@@ -1,17 +1,17 @@
 "use client";
 import { DataTable } from "@/components/common/data-table";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { createBranchListColumns } from "./table-columns";
 import { IBranch } from "@/interfaces/branch.interface";
 import { ResponseMeta } from "@/interfaces/types";
-import { Lucide, PaginationControl } from "@/components/common";
+import { Lucide, PaginationControl, SearchInput } from "@/components/common";
 import { useParamsNavigation } from "@/hooks";
-import { Input, SelectDropdown } from "@/components/ui";
+import { SelectDropdown } from "@/components/ui";
 import { BRANCH_STATUS_OPTIONS } from "@/lib/constants/branch.constants";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Router } from "lucide-react";
-import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { Can } from "@/providers/ability.provider";
+import { debounce } from "lodash";
+import Link from "next/link";
 
 type Props = {
   data: IBranch[];
@@ -19,8 +19,10 @@ type Props = {
 };
 export const BranchListingTable: React.FC<Props> = ({ data, meta }) => {
   const searchParams = useSearchParams();
-  const router = useRouter();
-  const { navigateWithQueryParams, getParams } = useParamsNavigation();
+
+  const { navigateWithQueryParams, getParams, getParamKeys } =
+    useParamsNavigation();
+
   const handlePageChange = (page) => {
     const params = getParams();
     params.set("page", page);
@@ -34,12 +36,75 @@ export const BranchListingTable: React.FC<Props> = ({ data, meta }) => {
     navigateWithQueryParams(params);
   };
 
-  const branchListColumns = useMemo(() => createBranchListColumns({}), []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedSearch = useCallback(
+    debounce((value: string) => {
+      const params = getParams();
+      params.set("page", "1");
+      params.set("fields", "name");
+      params.set("search", value);
+      navigateWithQueryParams(params);
+    }, 500),
+    [getParams, navigateWithQueryParams]
+  );
+
+  const onClearFilters = () => {
+    const params = getParams();
+    getParamKeys().forEach((el) => {
+      params.delete(el);
+    });
+    navigateWithQueryParams(params);
+  };
+
+  const handleClearSearch = () => {
+    const params = getParams();
+    params.delete("search");
+    params.delete("fields");
+    navigateWithQueryParams(params);
+  };
+
+  const handleSort = useCallback(
+    (orderBy: string, order: string) => {
+      const params = getParams();
+
+      if (!order) {
+        params.set("orderBy", orderBy);
+        params.set("order", "asc");
+      }
+      if (order === "asc") {
+        params.set("orderBy", orderBy);
+        params.set("order", "desc");
+      }
+
+      if (order === "desc") {
+        params.delete("order");
+        params.delete("orderBy");
+      }
+
+      navigateWithQueryParams(params);
+    },
+    [getParams, navigateWithQueryParams]
+  );
+
+  const branchListColumns = useMemo(
+    () =>
+      createBranchListColumns({
+        handleSort,
+        order: getParams().get("order"),
+        currentOrderField: getParams().get("orderBy"),
+      }),
+    [getParams, handleSort]
+  );
   return (
     <div>
       <h2 className="text-xl font-semibold mb-2 ">Branches</h2>
-      <div className=" bg-white rounded-lg mb-2 border flex items-center justify-between py-2 px-4">
-        <Input placeholder="Search" />
+      <div className=" bg-white rounded-lg  mb-2 border flex items-center justify-between py-2 px-4">
+        <SearchInput
+          placeholder="Search"
+          className="max-w-60 w-full "
+          onSearch={(value) => debouncedSearch(value)}
+          onClearSearch={handleClearSearch}
+        />
 
         <div className="flex items-center gap-2 flex-1">
           <SelectDropdown
@@ -49,9 +114,18 @@ export const BranchListingTable: React.FC<Props> = ({ data, meta }) => {
             onChange={handleStatusChange}
             placeholder="Status"
             options={BRANCH_STATUS_OPTIONS}
+            icon="Filter"
             className="w-full max-w-24 ml-auto"
           />
-          <Can I="list" a="branch">
+          {getParamKeys().filter((el) => el !== "page").length > 0 && (
+            <button
+              className="p-2 text-xs border rounded hover:bg-slate-100"
+              onClick={onClearFilters}
+            >
+              clear
+            </button>
+          )}
+          <Can I="create" a="branch">
             <Link
               href={`/admin/branches/create`}
               className="p-2 border rounded hover:bg-slate-100"

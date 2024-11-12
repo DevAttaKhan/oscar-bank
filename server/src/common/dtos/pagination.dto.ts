@@ -15,7 +15,15 @@ export class PaginationDto {
   @IsOptional()
   orderBy?: string = 'id';
 
+  @IsString()
+  @IsOptional()
+  search?: string;
+
   @IsOptional()
   @IsString()
   order?: 'asc' | 'desc' = 'desc';
+
+  @IsString()
+  @IsOptional()
+  fields?: string;
 }

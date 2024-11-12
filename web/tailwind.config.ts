@@ -16,6 +16,8 @@ const config: Config = {
         dash_gray: "#718EBF",
         dash_red: "#FE5C73",
         dash_blac: "#232323",
+        switch_unchecked: "#DFEAF2",
+        switch_checked: "#16DBCC",
       },
     },
   },

@@ -20,8 +20,16 @@ export const useParamsNavigation = () => {
     return params;
   };
 
+  const getParamKeys = (): string[] => {
+    const params = getParams();
+    const keys: string[] = [];
+    params.keys().forEach((el) => keys.push(el));
+    return keys;
+  };
+
   return {
     getParams,
+    getParamKeys,
     navigateWithQueryParams,
   };
 };

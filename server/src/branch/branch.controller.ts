@@ -23,13 +23,15 @@ export class BranchController {
     return this.branchService.create(createBranchDto);
   }
 
-  @SetPermissions(Permissions.BRANCH_CREATE)
+  @SetPermissions(Permissions.BRANCH_LIST)
   @UseGuards(JwtAuthGuard)
   @Get()
   findAll(@Query() query: BranchQueryDto) {
     const filterOptions: PaginationOptions<Branch> = {
       page: query.page,
       limit: query.limit,
+      search: query.search,
+      fields: query.fields,
       filters: { status: query.status },
       order: { [query.orderBy]: query.order },
     };

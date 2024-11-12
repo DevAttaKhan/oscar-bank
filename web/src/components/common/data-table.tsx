@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import {
   ColumnDef,
@@ -13,7 +13,6 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   SortingState,
-  Table,
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table";
@@ -21,29 +20,11 @@ import {
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  setTable?: (table: Table<TData>) => void;
-  // table: TanstackTable<TData>; //HERE
-  meta?: any;
-  isLoading?: boolean;
-  tableClass?: string;
-  headRowClass?: string;
-  bodyRowClass?: string;
-  perPage?: number;
-  gotoPage?: (page: { selected: number }) => void;
-  perPageLimit?: (value: number) => void;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  meta,
-  tableClass,
-  headRowClass,
-  bodyRowClass,
-  perPage,
-  setTable,
-  gotoPage,
-  perPageLimit,
 }: DataTableProps<TData, TValue>) {
   //STATES:
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -96,11 +77,6 @@ export function DataTable<TData, TValue>({
       },
     },
   });
-
-  useEffect(() => {
-    if (!table) return;
-    setTable && setTable(table);
-  }, [setTable, table]);
 
   return (
     <div className="bg-white rounded-lg overflow-auto md:py-6 md:px-8">

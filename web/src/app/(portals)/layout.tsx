@@ -10,7 +10,7 @@ export default function PortalLayout({
     <div className="pt-16">
       <SideNav navItems={sidebarConfig.admin} />
       <div className="w-[calc(100vw_-_256px)] ml-auto ">
-        <Topbar title="Overview" userImageUrl="/images/cards.logo.png" />
+        <Topbar title="Super Admin" userImageUrl="/images/cards.logo.png" />
         <main className="px-10 py-6">{children}</main>
       </div>
     </div>

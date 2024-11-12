@@ -10,7 +10,7 @@ type Props = {
 
 export const PaginationControl: React.FC<Props> = ({ meta, gotoPage }) => {
   return (
-    <div className="flex justify-between">
+    <div className="flex justify-between mt-2 leading-none ">
       <div></div>
       <ReactPaginate
         forcePage={meta?.currentPage && meta?.currentPage - 1}
@@ -21,10 +21,11 @@ export const PaginationControl: React.FC<Props> = ({ meta, gotoPage }) => {
         pageCount={meta?.totalPages || 0}
         previousLabel={<Lucide name="ArrowLeft" size={16} />}
         renderOnZeroPageCount={null}
-        containerClassName="flex items-center gap-6   text-slate-500"
+        pageLinkClassName="p-2 block w-8 grid place-items-center rounded border bg-white"
+        containerClassName="flex items-center gap-2"
         activeLinkClassName="text-green-500"
-        nextLinkClassName="block transition p-3 rounded-xl hover:shadow-lg hover:text-black dark:text-white dark:hover:bg-white"
-        previousLinkClassName="block transition p-3 rounded-xl hover:shadow-lg hover:text-black dark:text-white dark:hover:bg-white"
+        nextLinkClassName="p-2 block w-8 grid place-items-center rounded border bg-white"
+        previousLinkClassName="p-2 block w-8 grid place-items-center rounded border bg-white"
       />
     </div>
   );

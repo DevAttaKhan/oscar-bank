@@ -4,7 +4,7 @@ import { IApiError, IApiResponse } from "@/interfaces/types";
 import { IBranch } from "@/interfaces/branch.interface";
 import { auth } from "@/auth";
 
-const BranchesPage = async ({ params, searchParams }) => {
+const BranchesPage = async ({ searchParams }) => {
   const session = await auth();
 
   const res = await BranchService.list({

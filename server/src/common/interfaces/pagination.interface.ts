@@ -4,7 +4,8 @@ export interface PaginationOptions<T> {
   page?: number;
   limit?: number;
   filters?: Partial<T>;
-
+  search?: string;
+  fields?: string;
   order?: FindOptionsOrder<T>;
   relations?: string[];
 }
