@@ -23,7 +23,7 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 export const CreateBranchForm: React.FC = () => {
   const router = useRouter();
-  const { executeAsync, isExecuting, result } = useAction(createBranchAction, {
+  const { executeAsync } = useAction(createBranchAction, {
     onExecute: () => {
       toast.loading("Saving Branch", {
         toastId: "saving-branch",
@@ -69,7 +69,7 @@ export const CreateBranchForm: React.FC = () => {
   });
 
   const onSubmit = async (data: CreateBranchInputType) => {
-    const res = await executeAsync(data);
+    await executeAsync(data);
   };
 
   const handleDropdownChange = async (name: string, value: any) => {
