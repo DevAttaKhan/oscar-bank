@@ -1,17 +1,18 @@
-import { Permissions } from "@/interfaces/user.interface";
+import { IPermission } from "@/interfaces/types";
 
 export type PermissionGroup = {
   name: string;
-  permissions: string[];
+  permissions: IPermission[];
 };
 
-export function getGroupPermissions(): PermissionGroup[] {
-  const permissions: string[] = Object.values(Permissions);
+export function getGroupPermissions(
+  permissions: IPermission[]
+): PermissionGroup[] {
   const groupedPermissions = {};
 
   permissions.forEach((permission) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [entity, action] = permission.split(":");
+    const [entity, action] = permission.name.split(":");
 
     // If the entity does not exist in the groupedPermissions, add it
     if (!groupedPermissions[entity]) {

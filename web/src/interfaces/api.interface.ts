@@ -9,7 +9,7 @@ export interface IRequestOptions {
   endpoint: string;
   method?: string;
   body?: object;
-  params?: Object;
+  params?: object;
   options?: FetchOptions;
   token?: string;
 }

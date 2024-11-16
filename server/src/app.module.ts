@@ -9,6 +9,8 @@ import dbConfig from '@/database/config/db.local.config';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { BranchModule } from './branch/branch.module';
+import { GroupsModule } from './groups/groups.module';
+import { PermissionsModule } from './permissions/permissions.module';
 
 @Module({
   imports: [
@@ -21,6 +23,8 @@ import { BranchModule } from './branch/branch.module';
     UserModule,
     AuthModule,
     BranchModule,
+    GroupsModule,
+    PermissionsModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_FILTER, useClass: HttpExceptionFilter }],

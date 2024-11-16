@@ -1,17 +1,17 @@
 import { apiService } from "./api.service";
-import { CreateBranchInputType } from "@/lib/schema/branches.schema";
 import { IApiError, IApiResponse } from "@/interfaces/types";
-import { IBranch } from "@/interfaces/branch.interface";
-
+import { IGroup } from "@/interfaces/groups.interface";
+import { CreateGroupSchemaInputType } from "@/lib/schema/groups.schema";
 import { RequestConfig } from "@/interfaces/api.interface";
-export class BranchService {
-  public static async createBranch(
-    payload: CreateBranchInputType,
+
+export class GroupsService {
+  public static async createGroup(
+    payload: CreateGroupSchemaInputType,
     token?: string
-  ): Promise<IApiResponse<IBranch> | IApiError> {
+  ): Promise<IApiResponse<IGroup> | IApiError> {
     try {
-      const response = await apiService.post<IApiResponse<IBranch>>({
-        endpoint: "/branch",
+      const response = await apiService.post<IApiResponse<IGroup>>({
+        endpoint: "/groups",
         body: payload,
         token,
       });
@@ -23,11 +23,11 @@ export class BranchService {
 
   public static async list(
     config: RequestConfig
-  ): Promise<IApiResponse<IBranch> | IApiError> {
+  ): Promise<IApiResponse<IGroup> | IApiError> {
     try {
       const { params, options, token } = config;
-      const response = await apiService.get<IApiResponse<IBranch>>({
-        endpoint: "/branch",
+      const response = await apiService.get<IApiResponse<IGroup>>({
+        endpoint: "/groups",
         params,
         options: options,
         token,

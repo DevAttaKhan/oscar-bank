@@ -17,6 +17,7 @@ class SerializeInterceptor implements NestInterceptor {
     return next.handle().pipe(
       map((data: any) => {
         return plainToInstance(this.dto, data, {
+          enableImplicitConversion: true,
           excludeExtraneousValues: true,
         });
       }),

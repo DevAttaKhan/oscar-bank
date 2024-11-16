@@ -8,7 +8,6 @@ import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
 import { User } from '@/common/decorators/current-user.decorator';
 import { IUserFlattenedPermissions } from '@/common/interfaces/user.interface';
 import { PaginationOptions } from '@/common/interfaces/pagination.interface';
-import { PaginationDto } from '@/common/dtos/pagination.dto';
 import { BranchQueryDto } from './dto/query.dto';
 import { Branch } from './entities/branch.entity';
 

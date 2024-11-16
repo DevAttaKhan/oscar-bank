@@ -19,6 +19,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       context.getHandler(),
       context.getClass(),
     ]);
+    if (!ResourcePermissions) return true;
     const canAccess = user.permissions.some((userPermission) => ResourcePermissions.includes(userPermission));
     return canAccess;
   }

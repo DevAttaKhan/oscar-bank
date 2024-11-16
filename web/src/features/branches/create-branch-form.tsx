@@ -39,10 +39,7 @@ export const CreateBranchForm: React.FC = () => {
       router.push("/admin/branches");
     },
 
-    onError: ({
-      error: { serverError, validationErrors, bindArgsValidationErrors },
-    }) => {
-      console.log(serverError, validationErrors, bindArgsValidationErrors);
+    onError: ({ error: { serverError } }) => {
       toast.update("saving-branch", {
         render: serverError,
         type: "error",

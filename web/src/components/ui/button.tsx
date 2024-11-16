@@ -10,6 +10,7 @@ type Props = {
 const Button: React.FC<Props> = ({ children, className, onClick, type }) => {
   return (
     <button
+      onClick={onClick}
       type={type || "button"}
       className={cn(
         " bg-blue-500 text-white w-full py-2 rounded-lg  hover:bg-opacity-90",

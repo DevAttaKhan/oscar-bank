@@ -63,14 +63,17 @@ export const sidebarConfig: Record<string, NavItem[]> = {
       label: "Settings",
       route: "/admin/settings",
       icon: "Settings",
-      permissions: [Permissions.GROUPS_MANAGE],
+      permissions: [Permissions.GROUPS_MANAGE, Permissions.PERMISSIONS_MANAGE],
       children: [
         {
           label: "Groups",
           route: "/admin/settings/groups",
           exact: true,
           icon: "Dot",
-          permissions: [Permissions.GROUPS_MANAGE],
+          permissions: [
+            Permissions.GROUPS_MANAGE,
+            Permissions.PERMISSIONS_MANAGE,
+          ],
         },
       ],
     },

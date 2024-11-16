@@ -1,20 +1,24 @@
 "use server";
 
-import { BranchService } from "@/services/branch.service";
-import { CreateBranchSchema } from "../schema/branches.schema";
+import { CreateGroupSchema } from "@/lib/schema/groups.schema";
+
 import { actionClient } from "./safe-action";
 import { ApiError } from "next/dist/server/api-utils";
 import { auth } from "@/auth";
+import { GroupsService } from "@/services/groups.service";
 
 const session = await auth();
-export const createBranchAction = actionClient
-  .schema(CreateBranchSchema)
+export const createGroupAction = actionClient
+  .schema(CreateGroupSchema)
   .action(async ({ parsedInput }) => {
-    const res = await BranchService.createBranch(
+    const res = await GroupsService.createGroup(
       parsedInput,
       session?.user.token
     );
-    if (res.statusCode === 401) {
+
+    console.log(res);
+
+    if (!res.statusCode || res?.statusCode !== 201) {
       throw new Error((res as ApiError).message);
     }
     return res;

@@ -1,9 +1,9 @@
-import { FindOptionsOrder } from 'typeorm';
+import { FindOptionsOrder, FindOptionsWhere } from 'typeorm';
 
 export interface PaginationOptions<T> {
   page?: number;
   limit?: number;
-  filters?: Partial<T>;
+  filters?: FindOptionsWhere<T> | FindOptionsWhere<T>[];
   search?: string;
   fields?: string;
   order?: FindOptionsOrder<T>;

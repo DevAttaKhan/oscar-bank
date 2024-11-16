@@ -1,33 +1,60 @@
 import { Lucide, Modal } from "@/components/common";
 import { Input } from "@/components/ui";
-import React from "react";
-import { getGroupPermissions } from "./data";
-import { Switch } from "@headlessui/react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Button from "@/components/ui/button";
+import { useAction } from "next-safe-action/hooks";
+import { createGroupAction } from "@/lib/actions/groups.actions";
+import { toast } from "react-toastify";
+import { CreateGroupSchema } from "@/lib/schema/groups.schema";
+import { IPermission } from "@/interfaces/types";
+import { PermissionManager } from "./permission-manager";
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
+  permissionsList?: IPermission[];
 };
 
-const Schema = z.object({
-  name: z.string().min(4, { message: "Group must have a name" }),
-  description: z.string().optional().or(z.literal("")),
-  permissions: z.array(z.string()),
-});
+export const AddGroupModal: React.FC<Props> = ({
+  isOpen,
+  onClose,
+  permissionsList,
+}) => {
+  const { executeAsync } = useAction(createGroupAction, {
+    onExecute: () => {
+      toast.loading("Saving Group", {
+        toastId: "saving-group",
+      });
+    },
+    onSuccess: () => {
+      toast.update("saving-group", {
+        render: "Branch Saved ",
+        type: "success",
+        isLoading: false,
+        autoClose: 2000,
+      });
+      onClose();
+    },
 
-export const AddGroupModal: React.FC<Props> = ({ isOpen, onClose }) => {
+    onError: ({ error: { serverError } }) => {
+      toast.update("saving-group", {
+        render: serverError,
+        type: "error",
+        isLoading: false,
+        autoClose: 2000,
+      });
+    },
+  });
   const {
     register,
     handleSubmit,
     watch,
     setValue,
     formState: { errors },
-  } = useForm<z.infer<typeof Schema>>({
-    resolver: zodResolver(Schema),
+  } = useForm<z.infer<typeof CreateGroupSchema>>({
+    resolver: zodResolver(CreateGroupSchema),
     defaultValues: {
       permissions: [],
     },
@@ -38,18 +65,18 @@ export const AddGroupModal: React.FC<Props> = ({ isOpen, onClose }) => {
 
   // Toggle function for permissions
   const handleTogglePermission = (permission) => {
-    if (permissions.includes(permission)) {
+    if (permissions.includes(permission.id)) {
       setValue(
         "permissions",
-        permissions.filter((p) => p !== permission)
+        permissions.filter((p) => p !== permission.id)
       );
     } else {
-      setValue("permissions", [...permissions, permission]);
+      setValue("permissions", [...permissions, permission.id]);
     }
   };
 
-  const onSubmit = (values) => {
-    console.log(values);
+  const onSubmit = async (values) => {
+    await executeAsync(values);
   };
 
   return (
@@ -78,40 +105,14 @@ export const AddGroupModal: React.FC<Props> = ({ isOpen, onClose }) => {
             error={errors?.description?.message}
             {...register("description")}
           />
-          <div className="grid grid-cols-[repeat(auto-fit,_minmax(200px,_1fr))] gap-4 mt-6">
-            {getGroupPermissions().map((group) => {
-              return (
-                <div key={group.name} className="border rounded p-2 ">
-                  <h4 className="capitalize text-lg font-bold mb-3">
-                    {group.name}
-                  </h4>
-                  <div>
-                    {group.permissions.map((permission) => (
-                      <div
-                        className="flex justify-between w-full mb-2"
-                        key={permission}
-                      >
-                        <label className="capitalize">
-                          {permission.split(":")[1]}
-                        </label>
-                        <Switch
-                          value={permission}
-                          checked={permissions.includes(permission)}
-                          onChange={() => handleTogglePermission(permission)}
-                          className="group relative flex h-6 w-12 cursor-pointer rounded-full bg-switch_unchecked p-1 transition-colors duration-200 ease-in-out focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white data-[checked]:bg-switch_checked"
-                        >
-                          <span
-                            aria-hidden="true"
-                            className="pointer-events-none inline-block size-4 translate-x-0 rounded-full bg-white ring-0 shadow-lg transition duration-200 ease-in-out group-data-[checked]:translate-x-6"
-                          />
-                        </Switch>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+          <h3 className="text-xl font-bold my-6">
+            Add Permissions to this group
+          </h3>
+          <PermissionManager
+            activePermissions={permissions}
+            permissionsList={permissionsList || []}
+            onTogglePermission={handleTogglePermission}
+          />
           <Button className="col-span-full mt-5" type="submit">
             Create Group
           </Button>

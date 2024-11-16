@@ -22,3 +22,9 @@ export interface IApiError {
   statusCode: number;
   message: string;
 }
+
+export interface IPermission {
+  id: number;
+  name: string;
+  description?: string;
+}

@@ -5,13 +5,28 @@ import { useParamsNavigation } from "@/hooks";
 import { BRANCH_STATUS_OPTIONS } from "@/lib/constants/branch.constants";
 import { Can } from "@/providers/ability.provider";
 import { debounce } from "lodash";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { AddGroupModal } from "./add-group-modal";
+import { PermissionsService } from "@/services/permissions.service";
+import { useSession } from "next-auth/react";
+import { IApiResponse, IPermission, Result } from "@/interfaces/types";
+import { toast } from "react-toastify";
+import { GroupListItem } from "./group-list-item";
+import { IGroup } from "@/interfaces/groups.interface";
 
-export const GroupsListing = () => {
+type Props = {
+  groups: Result<IGroup>;
+};
+
+export const GroupsListing: React.FC<Props> = ({ groups }) => {
+  const session = useSession();
+  const [permissionsList, setPermissionsList] = useState<IPermission[] | []>(
+    []
+  );
   const [isAddGroupModalOpen, setIsAddGroupModalOpen] = useState(false);
   const { navigateWithQueryParams, getParams, getParamKeys } =
     useParamsNavigation();
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedSearch = useCallback(
     debounce((value: string) => {
@@ -38,6 +53,24 @@ export const GroupsListing = () => {
     });
     navigateWithQueryParams(params);
   };
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await PermissionsService.list({
+          token: session.data?.user.token,
+        });
+        if (res?.statusCode === 200) {
+          setPermissionsList(
+            (res as IApiResponse<IPermission>)
+              .result as unknown as IPermission[]
+          );
+        }
+      } catch (error: any) {
+        toast.error(error.message);
+      }
+    })();
+  }, [session.data?.user.token]);
 
   return (
     <>
@@ -80,10 +113,20 @@ export const GroupsListing = () => {
             </Can>
           </div>
         </div>
+        <div className=" mt-5">
+          {groups.data.map((el) => (
+            <GroupListItem
+              key={el.name}
+              data={el}
+              permissionsList={permissionsList}
+            />
+          ))}
+        </div>
       </div>
       <AddGroupModal
         isOpen={isAddGroupModalOpen}
         onClose={() => setIsAddGroupModalOpen(false)}
+        permissionsList={permissionsList}
       />
     </>
   );

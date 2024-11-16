@@ -33,8 +33,12 @@ class ApiService {
   public get<T>(config: Omit<IRequestOptions, "method">): Promise<T> {
     const { endpoint, params, options, token } = config;
 
+    const url = params
+      ? `${endpoint}?${new URLSearchParams(params as any)}`
+      : endpoint;
+
     return this.request<T>({
-      endpoint: `${endpoint}?${new URLSearchParams(params as any)}`,
+      endpoint: url,
       method: "GET",
       options,
       token,
