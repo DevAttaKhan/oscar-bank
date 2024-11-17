@@ -10,15 +10,52 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Input } from "@/components/ui";
 import { areArraysEqual } from "@/lib/utils/common.util";
+import { updateGroupAction } from "@/lib/actions/groups.actions";
+import { useAction } from "next-safe-action/hooks";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 type Props = {
   data: IGroup;
+  isSelected: boolean;
   permissionsList: IPermission[];
+  onSelectGroup: (type: "single" | "bulk", id: number) => void;
 };
 
-export const GroupListItem: React.FC<Props> = ({ data, permissionsList }) => {
+export const GroupListItem: React.FC<Props> = ({
+  data,
+  isSelected,
+  permissionsList,
+  onSelectGroup,
+}) => {
   const [open, setOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const router = useRouter();
+  const { executeAsync } = useAction(updateGroupAction, {
+    onExecute: () => {
+      toast.loading("Updating Group", {
+        toastId: "updating-group",
+      });
+    },
+    onSuccess: () => {
+      toast.update("updating-group", {
+        render: "Group Saved ",
+        type: "success",
+        isLoading: false,
+        autoClose: 2000,
+      });
+      router.refresh();
+    },
+
+    onError: ({ error: { serverError } }) => {
+      toast.update("updating-group", {
+        render: serverError,
+        type: "error",
+        isLoading: false,
+        autoClose: 2000,
+      });
+    },
+  });
 
   const {
     register,
@@ -36,10 +73,8 @@ export const GroupListItem: React.FC<Props> = ({ data, permissionsList }) => {
     },
   });
 
-  // Watch the permissions array to see changes live
   const permissions = watch("permissions");
 
-  // Toggle function for permissions
   const handleTogglePermission = (permission) => {
     if (permissions.includes(permission.id)) {
       setValue(
@@ -52,7 +87,10 @@ export const GroupListItem: React.FC<Props> = ({ data, permissionsList }) => {
   };
 
   const handleUpdate = async (values) => {
-    console.log(values);
+    const res = await executeAsync(values);
+    if (res?.data?.statusCode === 200) {
+      setIsEditing(false);
+    }
   };
 
   return (
@@ -63,7 +101,15 @@ export const GroupListItem: React.FC<Props> = ({ data, permissionsList }) => {
       >
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-2">
-            <Lucide name="Group" />
+            <Lucide
+              name="SquareCheck"
+              color={isSelected ? "red" : "gray"}
+              size={16}
+              onClick={(e) => {
+                e.stopPropagation();
+                onSelectGroup("bulk", data.id);
+              }}
+            />
             {!isEditing ? (
               <p className="text-base">{data.name}</p>
             ) : (
@@ -75,6 +121,19 @@ export const GroupListItem: React.FC<Props> = ({ data, permissionsList }) => {
                 />
               </span>
             )}
+            <span
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsEditing((prev) => !prev);
+              }}
+            >
+              <Lucide
+                name={isEditing ? "CircleX" : "Pencil"}
+                color="#718EBF"
+                size={20}
+                className="p-1 cursor-pointer"
+              />
+            </span>
             {(isEditing ||
               !areArraysEqual(
                 data.permissions?.map((el) => el.id),
@@ -100,11 +159,11 @@ export const GroupListItem: React.FC<Props> = ({ data, permissionsList }) => {
           <span
             onClick={(e) => {
               e.stopPropagation();
-              setIsEditing((prev) => !prev);
+              onSelectGroup("single", data.id);
             }}
           >
             <Lucide
-              name={isEditing ? "CircleX" : "Pencil"}
+              name={"Trash"}
               color="#718EBF"
               className="p-1 border rounded hover:bg-slate-100"
             />

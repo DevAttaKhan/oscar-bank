@@ -1,5 +1,10 @@
 "use client";
-import { Lucide, SearchInput } from "@/components/common";
+import {
+  ConfirmationModal,
+  Lucide,
+  PaginationControl,
+  SearchInput,
+} from "@/components/common";
 import { SelectDropdown } from "@/components/ui";
 import { useParamsNavigation } from "@/hooks";
 import { BRANCH_STATUS_OPTIONS } from "@/lib/constants/branch.constants";
@@ -9,20 +14,29 @@ import React, { useCallback, useEffect, useState } from "react";
 import { AddGroupModal } from "./add-group-modal";
 import { PermissionsService } from "@/services/permissions.service";
 import { useSession } from "next-auth/react";
-import { IApiResponse, IPermission, Result } from "@/interfaces/types";
+import {
+  IApiError,
+  IApiResponse,
+  IPermission,
+  Result,
+} from "@/interfaces/types";
 import { toast } from "react-toastify";
 import { GroupListItem } from "./group-list-item";
 import { IGroup } from "@/interfaces/groups.interface";
+import { GroupsService } from "@/services/groups.service";
+import { useRouter } from "next/navigation";
 
 type Props = {
   groups: Result<IGroup>;
 };
 
 export const GroupsListing: React.FC<Props> = ({ groups }) => {
-  const session = useSession();
+  const [selectedGroups, setSelectedGroups] = useState<number[] | number>();
   const [permissionsList, setPermissionsList] = useState<IPermission[] | []>(
     []
   );
+  const session = useSession();
+  const router = useRouter();
   const [isAddGroupModalOpen, setIsAddGroupModalOpen] = useState(false);
   const { navigateWithQueryParams, getParams, getParamKeys } =
     useParamsNavigation();
@@ -54,11 +68,67 @@ export const GroupsListing: React.FC<Props> = ({ groups }) => {
     navigateWithQueryParams(params);
   };
 
+  const handlePageChange = (page) => {
+    const params = getParams();
+    params.set("page", page);
+    navigateWithQueryParams(params);
+  };
+
+  const handleSelectGroup = (type: "single" | "bulk", id) => {
+    if (type === "single") {
+      setSelectedGroups(id);
+      return;
+    }
+    const groupIds = Array.isArray(selectedGroups) ? selectedGroups : [];
+    const exists = groupIds?.includes(id);
+
+    if (exists) {
+      const filteredGroups = groupIds?.filter((el) => el !== id);
+      setSelectedGroups(filteredGroups);
+    } else {
+      setSelectedGroups([...groupIds, id]);
+    }
+  };
+
+  console.log(selectedGroups);
+
+  const handleRemoveGroup = async () => {
+    try {
+      if (!selectedGroups) throw new Error("No Group is Selected");
+      toast.loading("Updating Group", {
+        toastId: "group-delete",
+      });
+      const res = await GroupsService.delete(
+        selectedGroups,
+        session.data?.user.token
+      );
+      if ((res as IApiResponse<IGroup>).statusCode !== 200)
+        throw new Error((res as IApiError).message);
+
+      toast.update("group-delete", {
+        render: "Group Deleted",
+        type: "success",
+        isLoading: false,
+        autoClose: 2000,
+      });
+      setSelectedGroups([]);
+      router.refresh();
+    } catch (error: any) {
+      toast.update("group-delete", {
+        render: error.message,
+        type: "error",
+        isLoading: false,
+        autoClose: 2000,
+      });
+    }
+  };
+
   useEffect(() => {
     (async () => {
       try {
         const res = await PermissionsService.list({
           token: session.data?.user.token,
+          options: { cache: "force-cache" },
         });
         if (res?.statusCode === 200) {
           setPermissionsList(
@@ -119,14 +189,26 @@ export const GroupsListing: React.FC<Props> = ({ groups }) => {
               key={el.name}
               data={el}
               permissionsList={permissionsList}
+              onSelectGroup={handleSelectGroup}
+              isSelected={
+                Array.isArray(selectedGroups) && selectedGroups.includes(el.id)
+              }
             />
           ))}
         </div>
+
+        <PaginationControl meta={groups.meta} gotoPage={handlePageChange} />
       </div>
       <AddGroupModal
         isOpen={isAddGroupModalOpen}
-        onClose={() => setIsAddGroupModalOpen(false)}
         permissionsList={permissionsList}
+        onClose={() => setIsAddGroupModalOpen(false)}
+      />
+      <ConfirmationModal
+        isOpen={!Array.isArray(selectedGroups) && Boolean(selectedGroups)}
+        onClose={() => setSelectedGroups(undefined)}
+        message="Are you sure you want to remove this group?"
+        onConfirm={handleRemoveGroup}
       />
     </>
   );

@@ -10,7 +10,7 @@ import { Lucide } from "./lucide";
 type Props = {
   isOpen: boolean;
   onClose: () => void;
-  children: React.ReactElement;
+  children: React.ReactNode;
   contentClassName?: string;
 };
 

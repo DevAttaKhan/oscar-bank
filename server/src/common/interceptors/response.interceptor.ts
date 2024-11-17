@@ -31,8 +31,8 @@ export class ResponseInterceptor implements NestInterceptor {
       status: false,
       statusCode: status,
       path: request.url,
-      message: exception.message,
-      errors: (exception.getResponse() as any)?.message || exception.getResponse(),
+      message: exception?.message,
+      errors: (exception?.getResponse() as any)?.message || exception?.getResponse(),
     });
   }
 

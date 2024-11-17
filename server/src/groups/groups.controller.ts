@@ -16,10 +16,6 @@ import { UpdateGroupDto } from './dto/update-group.dto';
 import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
 import { SetPermissions } from '@/common/decorators/permissions.decorator';
 import { Permissions } from '@/common/constants/common.enum';
-import { IUserFlattenedPermissions } from '@/common/interfaces/user.interface';
-import { User } from '@/common/decorators/current-user.decorator';
-import { Serialize } from '@/common/interceptors/serialize.interceptor';
-import { GroupDto } from './dto/group.dto';
 import { GroupQueryDto } from './dto/group-query.dto';
 import { PaginationOptions } from '@/common/interfaces/pagination.interface';
 import { Group } from '@/database/entities';
@@ -63,7 +59,7 @@ export class GroupsController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.groupsService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.groupsService.remove(id);
   }
 }

@@ -54,6 +54,10 @@ class ApiService {
   public put<T>(config: Omit<IRequestOptions, "method">): Promise<T> {
     return this.request<T>({ ...config, method: "PUT" });
   }
+  // PATCH request
+  public patch<T>(config: Omit<IRequestOptions, "method">): Promise<T> {
+    return this.request<T>({ ...config, method: "PATCH" });
+  }
 
   // DELETE request
   public delete<T>(config: Omit<IRequestOptions, "method">): Promise<T> {

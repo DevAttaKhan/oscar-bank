@@ -37,4 +37,36 @@ export class GroupsService {
       return error.message;
     }
   }
+
+  public static async update(
+    payload: CreateGroupSchemaInputType,
+    token?: string
+  ): Promise<IApiResponse<IGroup> | IApiError> {
+    try {
+      const { id, ...body } = payload;
+      const response = await apiService.patch<IApiResponse<IGroup>>({
+        endpoint: `/groups/${id}`,
+        body,
+        token,
+      });
+      return response;
+    } catch (error: any) {
+      return error.message;
+    }
+  }
+
+  public static async delete(
+    id: number[] | number,
+    token?: string
+  ): Promise<IApiResponse<IGroup> | IApiError> {
+    try {
+      const response = await apiService.delete<IApiResponse<IGroup>>({
+        endpoint: `/groups/${id}`,
+        token,
+      });
+      return response;
+    } catch (error: any) {
+      return error.message;
+    }
+  }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -44,7 +44,7 @@ export class GroupsService {
       });
 
       if (!group) {
-        throw new Error('Group not found');
+        throw new NotFoundException('Group Not Found');
       }
 
       // Update basic fields
@@ -57,12 +57,11 @@ export class GroupsService {
 
       return this.groupRepo.save(group);
     } catch (error) {
-      console.error('Error updating group:', error);
       throw error;
     }
   }
 
   remove(id: number) {
-    return `This action removes a #${id} group`;
+    return this.groupRepo.delete(id);
   }
 }

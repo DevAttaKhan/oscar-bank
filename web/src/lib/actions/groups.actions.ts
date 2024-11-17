@@ -16,9 +16,16 @@ export const createGroupAction = actionClient
       session?.user.token
     );
 
-    console.log(res);
-
     if (!res.statusCode || res?.statusCode !== 201) {
+      throw new Error((res as ApiError).message);
+    }
+    return res;
+  });
+export const updateGroupAction = actionClient
+  .schema(CreateGroupSchema)
+  .action(async ({ parsedInput }) => {
+    const res = await GroupsService.update(parsedInput, session?.user.token);
+    if (!res.statusCode || res?.statusCode !== 200) {
       throw new Error((res as ApiError).message);
     }
     return res;

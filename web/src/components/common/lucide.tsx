@@ -5,10 +5,24 @@ type Props = {
   color?: string;
   size?: number;
   className?: string;
+  onClick?: (e: any) => void;
 };
 
-export const Lucide: React.FC<Props> = ({ name, color, size, className }) => {
+export const Lucide: React.FC<Props> = ({
+  name,
+  color,
+  size,
+  className,
+  onClick,
+}) => {
   const LucideIcon = icons[name];
 
-  return <LucideIcon color={color} size={size} className={className} />;
+  return (
+    <LucideIcon
+      color={color}
+      size={size}
+      className={className}
+      onClick={onClick}
+    />
+  );
 };

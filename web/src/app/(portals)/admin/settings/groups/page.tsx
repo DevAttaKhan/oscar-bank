@@ -4,9 +4,12 @@ import { IGroup } from "@/interfaces/groups.interface";
 import { IApiError, IApiResponse } from "@/interfaces/types";
 import { GroupsService } from "@/services/groups.service";
 
-const GroupsPage = async () => {
+const GroupsPage = async ({ searchParams }) => {
   const session = await auth();
-  const res = await GroupsService.list({ token: session?.user.token });
+  const res = await GroupsService.list({
+    token: session?.user.token,
+    params: await searchParams,
+  });
 
   if (res.statusCode !== 200) {
     throw new Error((res as IApiError).message);

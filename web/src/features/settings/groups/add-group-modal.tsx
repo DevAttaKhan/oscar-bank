@@ -13,8 +13,8 @@ import { PermissionManager } from "./permission-manager";
 
 type Props = {
   isOpen: boolean;
-  onClose: () => void;
   permissionsList?: IPermission[];
+  onClose: () => void;
 };
 
 export const AddGroupModal: React.FC<Props> = ({
