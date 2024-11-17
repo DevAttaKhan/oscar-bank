@@ -61,7 +61,17 @@ class ApiService {
 
   // DELETE request
   public delete<T>(config: Omit<IRequestOptions, "method">): Promise<T> {
-    return this.request<T>({ ...config, method: "DELETE" });
+    const { params, endpoint } = config;
+
+    const url = params
+      ? `${endpoint}?${new URLSearchParams(params as any)}`
+      : endpoint;
+    return this.request<T>({
+      ...config,
+      endpoint: url,
+      params,
+      method: "DELETE",
+    });
   }
 
   public prepareAuthHeaders(token?: string): object {

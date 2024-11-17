@@ -61,7 +61,7 @@ export class GroupsService {
     }
   }
 
-  remove(id: number) {
-    return this.groupRepo.delete(id);
+  remove(ids: number[]) {
+    return this.groupRepo.delete(ids);
   }
 }

@@ -5,9 +5,7 @@ import {
   PaginationControl,
   SearchInput,
 } from "@/components/common";
-import { SelectDropdown } from "@/components/ui";
 import { useParamsNavigation } from "@/hooks";
-import { BRANCH_STATUS_OPTIONS } from "@/lib/constants/branch.constants";
 import { Can } from "@/providers/ability.provider";
 import { debounce } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
@@ -31,6 +29,7 @@ type Props = {
 };
 
 export const GroupsListing: React.FC<Props> = ({ groups }) => {
+  const [confirmModal, setConfirmModal] = useState(false);
   const [selectedGroups, setSelectedGroups] = useState<number[] | number>();
   const [permissionsList, setPermissionsList] = useState<IPermission[] | []>(
     []
@@ -90,8 +89,6 @@ export const GroupsListing: React.FC<Props> = ({ groups }) => {
     }
   };
 
-  console.log(selectedGroups);
-
   const handleRemoveGroup = async () => {
     try {
       if (!selectedGroups) throw new Error("No Group is Selected");
@@ -112,6 +109,7 @@ export const GroupsListing: React.FC<Props> = ({ groups }) => {
         autoClose: 2000,
       });
       setSelectedGroups([]);
+      setConfirmModal(false);
       router.refresh();
     } catch (error: any) {
       toast.update("group-delete", {
@@ -154,17 +152,15 @@ export const GroupsListing: React.FC<Props> = ({ groups }) => {
             onClearSearch={handleClearSearch}
           />
 
-          <div className="flex items-center gap-2 flex-1">
-            <SelectDropdown
-              value={BRANCH_STATUS_OPTIONS.find(
-                (el) => el.value === getParams().get("status")
-              )}
-              onChange={() => {}}
-              placeholder="Status"
-              options={BRANCH_STATUS_OPTIONS}
-              icon="Filter"
-              className="w-full max-w-24 ml-auto"
-            />
+          <div className="flex items-center justify-end gap-2 flex-1 ml-auto ">
+            {Array.isArray(selectedGroups) && selectedGroups.length > 1 && (
+              <button
+                onClick={() => setConfirmModal(true)}
+                className="py-2 px-3 text-xs border rounded hover:bg-slate-100"
+              >
+                Delete
+              </button>
+            )}
             {getParamKeys().filter((el) => el !== "page").length > 0 && (
               <button
                 className="p-2 text-xs border rounded hover:bg-slate-100"
@@ -205,8 +201,14 @@ export const GroupsListing: React.FC<Props> = ({ groups }) => {
         onClose={() => setIsAddGroupModalOpen(false)}
       />
       <ConfirmationModal
-        isOpen={!Array.isArray(selectedGroups) && Boolean(selectedGroups)}
-        onClose={() => setSelectedGroups(undefined)}
+        isOpen={
+          (!Array.isArray(selectedGroups) && Boolean(selectedGroups)) ||
+          confirmModal
+        }
+        onClose={() => {
+          setSelectedGroups(undefined);
+          setConfirmModal(false);
+        }}
         message="Are you sure you want to remove this group?"
         onConfirm={handleRemoveGroup}
       />

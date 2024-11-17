@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, ArrayNotEmpty, IsNumber } from 'class-validator';
+import { IsString, IsNotEmpty, ArrayNotEmpty, IsNumber, IsOptional } from 'class-validator';
 
 export class CreateGroupDto {
   @IsString()
@@ -6,8 +6,8 @@ export class CreateGroupDto {
   name: string;
 
   @IsString()
-  @IsNotEmpty()
-  description: string;
+  @IsOptional()
+  description?: string;
 
   @ArrayNotEmpty()
   @IsNumber({}, { each: true })

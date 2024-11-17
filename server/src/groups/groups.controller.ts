@@ -9,6 +9,7 @@ import {
   UseGuards,
   Query,
   ParseIntPipe,
+  BadRequestException,
 } from '@nestjs/common';
 import { GroupsService } from './groups.service';
 import { CreateGroupDto } from './dto/create-group.dto';
@@ -58,8 +59,14 @@ export class GroupsController {
     return this.groupsService.update(id, updateGroupDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.groupsService.remove(id);
+  @Delete()
+  remove(@Query('ids') ids: string) {
+    if (!ids) {
+      throw new BadRequestException();
+    }
+
+    const groupIds = ids.split(',').map((el) => Number(el));
+
+    return this.groupsService.remove(groupIds);
   }
 }

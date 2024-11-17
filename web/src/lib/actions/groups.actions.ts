@@ -6,6 +6,7 @@ import { actionClient } from "./safe-action";
 import { ApiError } from "next/dist/server/api-utils";
 import { auth } from "@/auth";
 import { GroupsService } from "@/services/groups.service";
+import { IApiError } from "@/interfaces/types";
 
 const session = await auth();
 export const createGroupAction = actionClient
@@ -17,7 +18,7 @@ export const createGroupAction = actionClient
     );
 
     if (!res.statusCode || res?.statusCode !== 201) {
-      throw new Error((res as ApiError).message);
+      throw new Error((res as IApiError)?.errors?.join());
     }
     return res;
   });

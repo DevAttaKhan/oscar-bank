@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { CreateGroupSchema } from "@/lib/schema/groups.schema";
 import { IPermission } from "@/interfaces/types";
 import { PermissionManager } from "./permission-manager";
+import { useRouter } from "next/navigation";
 
 type Props = {
   isOpen: boolean;
@@ -22,6 +23,21 @@ export const AddGroupModal: React.FC<Props> = ({
   onClose,
   permissionsList,
 }) => {
+  const router = useRouter();
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    reset,
+    setValue,
+    formState: { errors },
+  } = useForm<z.infer<typeof CreateGroupSchema>>({
+    resolver: zodResolver(CreateGroupSchema),
+    defaultValues: {
+      permissions: [],
+    },
+  });
   const { executeAsync } = useAction(createGroupAction, {
     onExecute: () => {
       toast.loading("Saving Group", {
@@ -35,6 +51,8 @@ export const AddGroupModal: React.FC<Props> = ({
         isLoading: false,
         autoClose: 2000,
       });
+      reset();
+      router.refresh();
       onClose();
     },
 
@@ -45,18 +63,6 @@ export const AddGroupModal: React.FC<Props> = ({
         isLoading: false,
         autoClose: 2000,
       });
-    },
-  });
-  const {
-    register,
-    handleSubmit,
-    watch,
-    setValue,
-    formState: { errors },
-  } = useForm<z.infer<typeof CreateGroupSchema>>({
-    resolver: zodResolver(CreateGroupSchema),
-    defaultValues: {
-      permissions: [],
     },
   });
 

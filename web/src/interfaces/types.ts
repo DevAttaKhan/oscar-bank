@@ -19,8 +19,11 @@ export interface ResponseMeta {
   currentPage: number;
 }
 export interface IApiError {
-  statusCode: number;
+  status: false;
+  statusCode: 400;
+  path: string;
   message: string;
+  errors?: string[];
 }
 
 export interface IPermission {

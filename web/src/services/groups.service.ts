@@ -56,13 +56,15 @@ export class GroupsService {
   }
 
   public static async delete(
-    id: number[] | number,
+    ids: number[] | number,
     token?: string
   ): Promise<IApiResponse<IGroup> | IApiError> {
     try {
+      const params = Array.isArray(ids) ? { ids: ids.join(",") } : { ids: ids };
       const response = await apiService.delete<IApiResponse<IGroup>>({
-        endpoint: `/groups/${id}`,
+        endpoint: `/groups`,
         token,
+        params,
       });
       return response;
     } catch (error: any) {
