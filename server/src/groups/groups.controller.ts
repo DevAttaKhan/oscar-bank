@@ -23,11 +23,11 @@ import { Group } from '@/database/entities';
 import { Not } from 'typeorm';
 
 @UseGuards(JwtAuthGuard)
+@SetPermissions(Permissions.PERMISSIONS_MANAGE, Permissions.GROUPS_MANAGE)
 @Controller('groups')
 export class GroupsController {
   constructor(private readonly groupsService: GroupsService) {}
 
-  @SetPermissions(Permissions.PERMISSIONS_MANAGE, Permissions.GROUPS_MANAGE)
   @Post()
   create(@Body() createGroupDto: CreateGroupDto) {
     return this.groupsService.create(createGroupDto);

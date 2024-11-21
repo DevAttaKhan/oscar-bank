@@ -20,7 +20,7 @@ export interface ResponseMeta {
 }
 export interface IApiError {
   status: false;
-  statusCode: 400;
+  statusCode: number;
   path: string;
   message: string;
   errors?: string[];
