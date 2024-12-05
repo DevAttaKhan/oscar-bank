@@ -11,6 +11,7 @@ import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { BranchModule } from './branch/branch.module';
 import { GroupsModule } from './groups/groups.module';
 import { PermissionsModule } from './permissions/permissions.module';
+import { DesignationModule } from './designation/designation.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { PermissionsModule } from './permissions/permissions.module';
     BranchModule,
     GroupsModule,
     PermissionsModule,
+    DesignationModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_FILTER, useClass: HttpExceptionFilter }],

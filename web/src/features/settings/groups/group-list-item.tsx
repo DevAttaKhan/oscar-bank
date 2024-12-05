@@ -95,7 +95,7 @@ export const GroupListItem: React.FC<Props> = ({
 
   return (
     <div className="   rounded-lg border bg-white mb-4">
-      <button
+      <div
         onClick={() => setOpen((prev) => !prev)}
         className="px-4  h-[50px] flex items-center justify-between w-full cursor-pointer border-b"
       >
@@ -174,7 +174,7 @@ export const GroupListItem: React.FC<Props> = ({
             className="p-1 border rounded hover:bg-slate-100"
           />
         </div>
-      </button>
+      </div>
 
       <div
         className={cn("overflow-auto transition-all ", [

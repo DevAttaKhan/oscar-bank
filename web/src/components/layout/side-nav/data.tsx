@@ -63,7 +63,11 @@ export const sidebarConfig: Record<string, NavItem[]> = {
       label: "Settings",
       route: "/admin/settings",
       icon: "Settings",
-      permissions: [Permissions.GROUPS_MANAGE, Permissions.PERMISSIONS_MANAGE],
+      permissions: [
+        Permissions.GROUPS_MANAGE,
+        Permissions.PERMISSIONS_MANAGE,
+        Permissions.DESIGNATION_LIST,
+      ],
       children: [
         {
           label: "Groups",
@@ -75,45 +79,14 @@ export const sidebarConfig: Record<string, NavItem[]> = {
             Permissions.PERMISSIONS_MANAGE,
           ],
         },
+        {
+          label: "Designations",
+          route: "/admin/settings/designations",
+          exact: true,
+          icon: "Dot",
+          permissions: [Permissions.DESIGNATION_LIST],
+        },
       ],
-    },
-  ],
-  internal: [
-    {
-      label: "Dashboard",
-      route: "/employee/dashboard",
-      icon: "Grid2x2",
-    },
-    {
-      label: "Tasks",
-      route: "/employee/tasks",
-      icon: "Grid2x2",
-    },
-    {
-      label: "Profile",
-      route: "/employee/profile",
-      icon: "Grid2x2",
-    },
-  ],
-  dashboard: [
-    {
-      label: "My Dashboard",
-      route: "/customer/dashboard",
-      icon: "Grid2x2",
-    },
-    {
-      label: "Accounts",
-      route: "/customer/accounts",
-      icon: "Grid2x2",
-      children: [
-        { label: "View Accounts", route: "/customer/accounts/view" },
-        { label: "Transactions", route: "/customer/accounts/transactions" },
-      ],
-    },
-    {
-      label: "Support",
-      route: "/customer/support",
-      icon: "Grid2x2",
     },
   ],
 };

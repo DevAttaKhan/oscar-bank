@@ -8,6 +8,8 @@ export interface PaginationOptions<T> {
   fields?: string;
   order?: FindOptionsOrder<T>;
   relations?: string[];
+  orderBy?: string;
+  orderDirection?: 'asc' | 'desc' | 'ASC' | 'DESC';
 }
 
 export interface PaginatedResult<T> {

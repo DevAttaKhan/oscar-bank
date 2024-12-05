@@ -130,6 +130,13 @@ export enum Permissions {
   LOANS_DELETE = 'loans:delete',
   LOANS_LIST = 'loans:list',
 
+  // Designation
+  DESIGNATION_CREATE = 'designation:create',
+  DESIGNATION_READ = 'designation:read',
+  DESIGNATION_UPDATE = 'designation:update',
+  DESIGNATION_DELETE = 'designation:delete',
+  DESIGNATION_LIST = 'designation:list',
+
   // Permissions and Groups
   PERMISSIONS_MANAGE = 'permissions:manage',
   GROUPS_MANAGE = 'groups:manage',
