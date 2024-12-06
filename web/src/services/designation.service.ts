@@ -1,6 +1,5 @@
 import { apiService } from "./api.service";
 import { IApiError, IApiResponse } from "@/interfaces/types";
-import { IGroup } from "@/interfaces/groups.interface";
 import { RequestConfig } from "@/interfaces/api.interface";
 import { IDesignation } from "@/interfaces/designation.interface";
 import { DesignationInputType } from "@/lib/schema/common.schema";
@@ -9,9 +8,9 @@ export class DesignationService {
   public static async createDesignation(
     payload: DesignationInputType,
     token?: string
-  ): Promise<IApiResponse<IGroup> | IApiError> {
+  ): Promise<IApiResponse<IDesignation> | IApiError> {
     try {
-      const response = await apiService.post<IApiResponse<IGroup>>({
+      const response = await apiService.post<IApiResponse<IDesignation>>({
         endpoint: "/designation",
         body: payload,
         token,

@@ -1,22 +1,23 @@
 "use client";
 import { DataTable } from "@/components/common/data-table";
-import { useCallback, useMemo } from "react";
-
+import { useCallback, useMemo, useState } from "react";
 import { ResponseMeta } from "@/interfaces/types";
 import { Lucide, PaginationControl, SearchInput } from "@/components/common";
 import { useParamsNavigation } from "@/hooks";
-
 import { Can } from "@/providers/ability.provider";
 import { debounce } from "lodash";
-import Link from "next/link";
 import { IDesignation } from "@/interfaces/designation.interface";
 import { createDesignationListColumns } from "./table-columns";
+import { UpsertDesignationModal } from "./upsert-designation.modal";
 
 type Props = {
   data: IDesignation[];
   meta: ResponseMeta;
 };
 export const DesignationListingTable: React.FC<Props> = ({ data, meta }) => {
+  const [designation, setDesignation] = useState<
+    IDesignation | boolean | undefined
+  >();
   const { navigateWithQueryParams, getParams, getParamKeys } =
     useParamsNavigation();
 
@@ -76,47 +77,60 @@ export const DesignationListingTable: React.FC<Props> = ({ data, meta }) => {
     [getParams, navigateWithQueryParams]
   );
 
-  const branchListColumns = useMemo(
+  const handleEditDesignation = (designation: IDesignation) => {
+    console.log(designation);
+    setDesignation(designation);
+  };
+
+  const DesignationListColumns = useMemo(
     () =>
       createDesignationListColumns({
         handleSort,
         order: getParams().get("order"),
         currentOrderField: getParams().get("orderBy"),
+        onEdit: handleEditDesignation,
       }),
     [getParams, handleSort]
   );
   return (
-    <div>
-      <h2 className="text-xl font-semibold mb-2 ">Designations</h2>
-      <div className=" bg-white rounded-lg  mb-2 border flex items-center justify-between py-2 px-4">
-        <SearchInput
-          placeholder="Search"
-          className="max-w-60 w-full "
-          onSearch={(value) => debouncedSearch(value)}
-          onClearSearch={handleClearSearch}
-        />
+    <>
+      <div>
+        <h2 className="text-xl font-semibold mb-2 ">Designations</h2>
+        <div className=" bg-white rounded-lg  mb-2 border flex items-center justify-between py-2 px-4">
+          <SearchInput
+            placeholder="Search"
+            className="max-w-60 w-full "
+            onSearch={(value) => debouncedSearch(value)}
+            onClearSearch={handleClearSearch}
+          />
 
-        <div className="flex items-center justify-end gap-2 flex-1">
-          {getParamKeys().filter((el) => el !== "page").length > 0 && (
-            <button
-              className="p-2 text-xs border rounded hover:bg-slate-100"
-              onClick={onClearFilters}
-            >
-              clear
-            </button>
-          )}
-          <Can I="create" a="designation">
-            <Link
-              href={`/admin/branches/create`}
-              className="p-2 border rounded hover:bg-slate-100"
-            >
-              <Lucide name="Plus" size={16} />
-            </Link>
-          </Can>
+          <div className="flex items-center justify-end gap-2 flex-1">
+            {getParamKeys().filter((el) => el !== "page").length > 0 && (
+              <button
+                className="p-2 text-xs border rounded hover:bg-slate-100"
+                onClick={onClearFilters}
+              >
+                clear
+              </button>
+            )}
+            <Can I="create" a="designation">
+              <button
+                onClick={() => setDesignation(true)}
+                className="p-2 border rounded hover:bg-slate-100"
+              >
+                <Lucide name="Plus" size={16} />
+              </button>
+            </Can>
+          </div>
         </div>
+        <DataTable columns={DesignationListColumns} data={data} />
+        <PaginationControl meta={meta} gotoPage={handlePageChange} />
       </div>
-      <DataTable columns={branchListColumns} data={data} />
-      <PaginationControl meta={meta} gotoPage={handlePageChange} />
-    </div>
+      <UpsertDesignationModal
+        isOpen={!!designation}
+        onClose={() => setDesignation(false)}
+        designation={designation as IDesignation}
+      />
+    </>
   );
 };
