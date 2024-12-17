@@ -128,6 +128,7 @@ export const GroupsListing: React.FC<Props> = ({ groups }) => {
           token: session.data?.user.token,
           options: { cache: "force-cache" },
         });
+        console.log(res);
         if (res?.statusCode === 200) {
           setPermissionsList(
             (res as IApiResponse<IPermission>)

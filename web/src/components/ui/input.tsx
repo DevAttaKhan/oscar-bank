@@ -14,7 +14,7 @@ type Props = {
   labelClassName?: string;
   inputClassName?: string;
   error?: string;
-  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+  // onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   [key: string]: any; // Allows for any additional props
 };
 

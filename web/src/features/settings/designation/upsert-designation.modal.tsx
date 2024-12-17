@@ -1,3 +1,4 @@
+"use client";
 import { Lucide, Modal } from "@/components/common";
 import { Input } from "@/components/ui";
 import { useForm } from "react-hook-form";
@@ -35,6 +36,8 @@ export const UpsertDesignationModal: React.FC<Props> = ({
     resolver: zodResolver(CreateDesignationSchma),
     values: designation,
   });
+
+  console.log(designation);
 
   const createDesignation = async (body) => {
     const res = await toast.promise(

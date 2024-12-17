@@ -129,7 +129,11 @@ export const DesignationListingTable: React.FC<Props> = ({ data, meta }) => {
       <UpsertDesignationModal
         isOpen={!!designation}
         onClose={() => setDesignation(false)}
-        designation={designation as IDesignation}
+        designation={
+          typeof designation !== "boolean"
+            ? (designation as IDesignation)
+            : undefined
+        }
       />
     </>
   );
