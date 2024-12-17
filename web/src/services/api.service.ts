@@ -10,7 +10,6 @@ class ApiService {
   // Generic request handler
   private async request<T>(config: IRequestOptions): Promise<T> {
     const { endpoint, method, body, options, token } = config;
-    console.log(`${this.baseURL}${endpoint}`);
     const headers = this.prepareAuthHeaders(token);
     const response = await fetch(`${this.baseURL}${endpoint}`, {
       method,

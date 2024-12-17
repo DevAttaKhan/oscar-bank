@@ -37,8 +37,6 @@ export const UpsertDesignationModal: React.FC<Props> = ({
     values: designation,
   });
 
-  console.log(designation);
-
   const createDesignation = async (body) => {
     const res = await toast.promise(
       DesignationService.createDesignation(body, session.data?.user.token),
@@ -73,8 +71,6 @@ export const UpsertDesignationModal: React.FC<Props> = ({
   };
 
   const onSubmit = async (values) => {
-    console.log(values);
-
     try {
       if (values?.id) {
         updateDesignation(values);

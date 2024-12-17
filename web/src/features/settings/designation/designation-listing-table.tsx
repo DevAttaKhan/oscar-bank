@@ -78,7 +78,6 @@ export const DesignationListingTable: React.FC<Props> = ({ data, meta }) => {
   );
 
   const handleEditDesignation = (designation: IDesignation) => {
-    console.log(designation);
     setDesignation(designation);
   };
 
