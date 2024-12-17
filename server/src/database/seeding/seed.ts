@@ -5,6 +5,7 @@ import dbLocalConfig from '../config/db.local.config';
 import { MainSeeder } from './main.seeder';
 import { PermissionFactory } from './factories';
 import { ConfigModule } from '@nestjs/config';
+import { DesignationSeeder } from './disignation.seeder';
 ConfigModule.forRoot({
   envFilePath: '.env',
 });
@@ -12,7 +13,7 @@ ConfigModule.forRoot({
 const options: DataSourceOptions & SeederOptions = {
   ...dbLocalConfig(),
   factories: [PermissionFactory],
-  seeds: [MainSeeder],
+  seeds: [MainSeeder, DesignationSeeder],
 };
 
 const datasource = new DataSource(options);

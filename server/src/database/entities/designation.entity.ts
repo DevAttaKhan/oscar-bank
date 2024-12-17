@@ -12,6 +12,6 @@ export class Designation {
   @Column({ nullable: true })
   description: string;
 
-  @OneToMany(() => Employee, (employee) => employee.designation)
+  @OneToMany(() => Employee, (employee) => employee.designation, { onDelete: 'CASCADE' })
   employee: Employee;
 }

@@ -1,4 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn, OneToOne, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  ManyToOne,
+  JoinColumn,
+  OneToOne,
+  OneToMany,
+} from 'typeorm';
 import { User } from './user.entity';
 import { EmploymentStatus, EmploymentType, PerformanceRating } from '@/common/constants/common.enum';
 import { Designation } from './designation.entity';
@@ -54,7 +63,7 @@ export class Employee {
   @CreateDateColumn()
   createdAt: Date;
 
-  @ManyToOne(() => Designation, (designation) => designation.employee)
+  @ManyToOne(() => Designation, (designation) => designation.employee, { onDelete: 'CASCADE' })
   @JoinColumn()
   designation: Designation;
 
