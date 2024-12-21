@@ -49,7 +49,6 @@ const DesignationsList: string[] = [
   'Audit Officer',
   'Treasury Officer',
   'Compliance Officer',
-  'Loan Officer',
   'Operations Officer',
   'Financial Analyst',
   'HR Officer',

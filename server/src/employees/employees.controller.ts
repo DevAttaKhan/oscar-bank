@@ -1,4 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Query,
+  ParseIntPipe,
+  BadRequestException,
+} from '@nestjs/common';
 import { EmployeesService } from './employees.service';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
@@ -34,18 +46,27 @@ export class EmployeesController {
     return this.employeesService.findAll(filterOptions);
   }
 
+  @SetPermissions(Permissions.EMPLOYEES_READ)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.employeesService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.employeesService.findOne(id);
   }
 
+  @SetPermissions(Permissions.EMPLOYEES_UPDATE)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateEmployeeDto: UpdateEmployeeDto) {
     return this.employeesService.update(+id, updateEmployeeDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.employeesService.remove(+id);
+  @SetPermissions(Permissions.EMPLOYEES_LIST)
+  @Delete()
+  remove(@Query('ids') ids: string) {
+    if (!ids) {
+      throw new BadRequestException();
+    }
+
+    const employeIds = ids.split(',').map((el) => Number(el));
+
+    return this.employeesService.remove(employeIds);
   }
 }

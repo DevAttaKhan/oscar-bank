@@ -56,7 +56,10 @@ export class Employee {
   @Column({ nullable: true })
   bonus: number;
 
-  @OneToOne(() => User, (user) => user.employee)
+  @OneToOne(() => User, (user) => user.employee, {
+    cascade: ['remove'],
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
   user: User;
 
