@@ -2,10 +2,10 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateDesignationDto } from './dto/create-designation.dto';
 import { UpdateDesignationDto } from './dto/update-designation.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Designation, Employee } from '@/database/entities';
+import { Designation } from '@/database/entities';
 import { Repository } from 'typeorm';
 import { PaginationOptions } from '@/common/interfaces/pagination.interface';
-import { getPaginatedData } from '@/common/util/pagination.util';
+import { RawDesignation } from './types';
 
 @Injectable()
 export class DesignationService {
@@ -42,9 +42,20 @@ export class DesignationService {
           options.orderDirection.toLocaleUpperCase() as any,
         );
       }
-      queryBuilder.skip(offset).take(options.limit);
-      const [data, totalItems] = await queryBuilder.getManyAndCount();
+
+      queryBuilder.offset(offset).limit(options.limit);
+
+      const rows = (await queryBuilder.getRawMany()) as RawDesignation[];
+
+      const totalItems = await queryBuilder.getCount();
       const totalPages = totalItems > 0 ? Math.ceil(totalItems / options.limit) : 0;
+
+      const data = rows.map((el) => ({
+        id: el.designation_id,
+        title: el.designation_title,
+        description: el.designation_description,
+        employees: el.employeeCount,
+      }));
 
       return {
         data,

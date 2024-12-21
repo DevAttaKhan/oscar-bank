@@ -12,6 +12,8 @@ const DesignationsPage = async ({ searchParams }) => {
     token: session?.user.token,
   });
 
+  console.log((res as IApiResponse<IDesignation>).result.data.length);
+
   if ((res as IApiError).statusCode !== 200) {
     throw new Error("Oops Bang");
   }
