@@ -12,6 +12,7 @@ import { BranchModule } from './branch/branch.module';
 import { GroupsModule } from './groups/groups.module';
 import { PermissionsModule } from './permissions/permissions.module';
 import { DesignationModule } from './designation/designation.module';
+import { EmployeesModule } from './employees/employees.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { DesignationModule } from './designation/designation.module';
     GroupsModule,
     PermissionsModule,
     DesignationModule,
+    EmployeesModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_FILTER, useClass: HttpExceptionFilter }],

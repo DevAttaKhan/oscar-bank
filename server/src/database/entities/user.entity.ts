@@ -123,6 +123,7 @@ export class User {
 
   @BeforeInsert()
   async hashPassword() {
+    if (!this.password) return;
     this.password = await bc.hash(this.password, 10);
   }
 }

@@ -26,13 +26,13 @@ export class ResponseInterceptor implements NestInterceptor {
 
     const status =
       exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
-
+    console.log(exception);
     response.status(status).json({
       status: false,
       statusCode: status,
       path: request.url,
       message: exception?.message,
-      errors: (exception?.getResponse() as any)?.message || exception?.getResponse(),
+      errors: this.parseException(exception),
     });
   }
 
@@ -49,5 +49,10 @@ export class ResponseInterceptor implements NestInterceptor {
       statusCode,
       result: res,
     };
+  }
+
+  parseException(exception: HttpException): string {
+    const response = exception.getResponse?.() as any;
+    return response?.message || response || exception.message || String(exception);
   }
 }

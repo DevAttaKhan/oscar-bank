@@ -1,5 +1,6 @@
 import { User } from '@/database/entities/user.entity';
 import { IUserFlattenedPermissions } from '../interfaces/user.interface';
+import { ILike } from 'typeorm';
 
 export function mergePermissions(user: User): IUserFlattenedPermissions {
   // Extract all permission names from all groups
@@ -18,3 +19,18 @@ export function mergePermissions(user: User): IUserFlattenedPermissions {
 
   return userWithMergedPermissions;
 }
+
+export const mapFieldsToSearchFilters = (search: string, fields: string[]) => {
+  return fields.reduce((acc, field) => {
+    const [relation, subField] = field.split('.');
+
+    if (subField) {
+      acc[relation] = acc[relation] || {};
+      acc[relation][subField] = ILike(`%${search}%`);
+    } else {
+      acc[field] = ILike(`%${search}%`);
+    }
+
+    return acc;
+  }, {});
+};
