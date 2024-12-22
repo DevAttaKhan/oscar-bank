@@ -20,6 +20,7 @@ import {
   PerformanceRating,
 } from '@/common/constants/common.enum';
 import { Type } from 'class-transformer';
+import { generatedUniqueEmployeecode } from '@/common/util/common.util';
 
 export class CreateEmployeeDto {
   @IsNotEmpty()
@@ -62,21 +63,21 @@ export class CreateEmployeeDto {
 
   @IsOptional()
   @IsEnum(UserType, { message: 'UserType must be ADMIN, EMPLOYEE, or CUSTOMER' })
-  userType?: UserType.EMPLOYEE;
+  userType?: UserType = UserType.EMPLOYEE;
 
   @IsOptional()
   @IsBoolean()
-  isEmailVerified?: true;
+  isEmailVerified?: boolean = true;
 
   @IsOptional()
   @IsBoolean()
-  isPhoneVerified?: true;
+  isPhoneVerified?: boolean = true;
 
   // Employee-specific fields
-  @IsNotEmpty()
+
   @IsString()
-  @Length(5, 20)
-  employeeCode: string;
+  @IsOptional()
+  employeeCode: string = generatedUniqueEmployeecode();
 
   @IsOptional()
   @IsEnum(EmploymentStatus, { message: 'EmploymentStatus must be ACTIVE, INACTIVE, or TERMINATED' })
@@ -99,7 +100,7 @@ export class CreateEmployeeDto {
   @IsOptional()
   @Type(() => Date)
   @IsDate()
-  dateOfJoining?: Date;
+  dateOfJoining?: Date = new Date();
 
   @IsOptional()
   @IsInt()
@@ -128,20 +129,4 @@ export class CreateEmployeeDto {
   @IsOptional()
   @IsString()
   department?: string;
-
-  @IsOptional()
-  @IsInt()
-  failedLoginAttempts?: number;
-
-  @IsOptional()
-  @IsDate()
-  lockedUntil?: Date;
-
-  @IsOptional()
-  @IsString()
-  preferredLanguage?: string;
-
-  @IsOptional()
-  @IsString()
-  timezone?: string;
 }

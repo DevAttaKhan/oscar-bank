@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -26,16 +26,21 @@ export class EmployeesService {
       const user = this.userRepo.create(dto);
       await queryRunner.manager.save(user);
 
-      const branch = await queryRunner.manager.getRepository(Branch).findOneBy({ id: dto.assignedBranchId });
-      const designation = await queryRunner.manager
-        .getRepository(Designation)
-        .findOneBy({ id: dto.designationId });
+      const [branchResult, designationResult, supervisorResult] = await Promise.allSettled([
+        queryRunner.manager.getRepository(Branch).findOneBy({ id: dto.assignedBranchId }),
+        queryRunner.manager.getRepository(Designation).findOneBy({ id: dto.designationId }),
+        queryRunner.manager.getRepository(Employee).findOneBy({ id: dto.supervisorId }),
+      ]);
 
-      // Create the employee and associate it with the user
+      const branch = branchResult.status === 'fulfilled' ? branchResult.value : null;
+      const designation = designationResult.status === 'fulfilled' ? designationResult.value : null;
+      const supervisor = supervisorResult.status === 'fulfilled' ? supervisorResult.value : null;
+
       const employee = this.employeeRepo.create({
         ...dto,
         assignedBranch: branch,
         designation: designation,
+        supervisor: supervisor,
         user,
       });
 
@@ -108,12 +113,11 @@ export class EmployeesService {
       });
 
       if (employees.length === 0) {
-        throw new Error('No employees found to delete');
+        throw new NotFoundException('No employees found to delete');
       }
 
       employees.forEach(async (el) => {
         await queryRunner.manager.getRepository(User).delete({ id: el.user.id });
-        await queryRunner.manager.getRepository(Employee).delete(el.id);
       });
 
       queryRunner.commitTransaction();

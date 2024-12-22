@@ -1,7 +1,7 @@
-import { Transform, Type } from 'class-transformer';
+import { Expose, Transform, Type } from 'class-transformer';
 import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 
-export class PaginationDto {
+export class PaginationQueryDto {
   @IsNumber()
   @Type(() => Number)
   page?: number = 1;
@@ -26,4 +26,18 @@ export class PaginationDto {
   @IsString()
   @IsOptional()
   fields?: string;
+}
+
+export class PaginationMetaDto {
+  @Expose()
+  totalItems: number;
+
+  @Expose()
+  itemsPerPage: number;
+
+  @Expose()
+  totalPages: number;
+
+  @Expose()
+  currentPage: number;
 }

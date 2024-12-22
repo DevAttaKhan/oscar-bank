@@ -1,6 +1,8 @@
 import { Repository, ILike } from 'typeorm';
 import { PaginatedResult, PaginationOptions } from '../interfaces/pagination.interface';
 import { mapFieldsToSearchFilters } from './common.util';
+import { Expose, Type } from 'class-transformer';
+import { PaginationMetaDto } from '../dtos/pagination.dto';
 
 const buildSearchFilter = (search: string, fields: string[]) => {
   if (!search || !fields) return undefined;
@@ -37,3 +39,16 @@ export async function getPaginatedData<T extends Object>(
     },
   };
 }
+
+export const createPaginatedDto = <DataDto>(dataClass: new () => DataDto) => {
+  class PaginatedDto {
+    @Type(() => dataClass)
+    @Expose()
+    data: DataDto;
+
+    @Type(() => PaginationMetaDto)
+    @Expose()
+    meta: PaginationMetaDto;
+  }
+  return PaginatedDto;
+};

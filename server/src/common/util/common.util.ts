@@ -2,6 +2,8 @@ import { User } from '@/database/entities/user.entity';
 import { IUserFlattenedPermissions } from '../interfaces/user.interface';
 import { ILike } from 'typeorm';
 
+import { customAlphabet } from 'nanoid';
+
 export function mergePermissions(user: User): IUserFlattenedPermissions {
   // Extract all permission names from all groups
   const permissions = user.groups.flatMap((group: any) =>
@@ -33,4 +35,12 @@ export const mapFieldsToSearchFilters = (search: string, fields: string[]) => {
 
     return acc;
   }, {});
+};
+
+const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'; // Uppercase and digits only
+
+export const generatedUniqueEmployeecode = () => {
+  const generateCode = customAlphabet(alphabet, 6);
+
+  return generateCode();
 };

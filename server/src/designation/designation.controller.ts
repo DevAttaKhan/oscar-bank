@@ -15,7 +15,7 @@ import { CreateDesignationDto } from './dto/create-designation.dto';
 import { UpdateDesignationDto } from './dto/update-designation.dto';
 import { PaginationOptions } from '@/common/interfaces/pagination.interface';
 import { Designation } from '@/database/entities';
-import { PaginationDto } from '@/common/dtos/pagination.dto';
+import { PaginationQueryDto } from '@/common/dtos/pagination.dto';
 import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
 import { SetPermissions } from '@/common/decorators/permissions.decorator';
 import { Permissions } from '@/common/constants/common.enum';
@@ -33,7 +33,7 @@ export class DesignationController {
 
   @SetPermissions(Permissions.DESIGNATION_LIST)
   @Get()
-  findAll(@Query() query: PaginationDto) {
+  findAll(@Query() query: PaginationQueryDto) {
     const filterOptions: PaginationOptions<Designation> = {
       page: query.page,
       limit: query.limit,
