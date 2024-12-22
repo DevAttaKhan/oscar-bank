@@ -5,7 +5,7 @@ import { Expose, Type } from 'class-transformer';
 import { PaginationMetaDto } from '../dtos/pagination.dto';
 
 const buildSearchFilter = (search: string, fields: string[]) => {
-  if (!search || !fields) return undefined;
+  if (!search || !fields) return [];
 
   return mapFieldsToSearchFilters(search, fields);
 };
@@ -17,10 +17,7 @@ export async function getPaginatedData<T extends Object>(
   const { page = 1, limit = 10, filters = {}, order, relations = [], search, fields } = options;
 
   const [data, totalItems] = await repository.findAndCount({
-    where: {
-      ...filters,
-      ...(search && buildSearchFilter(search, fields.split(','))),
-    },
+    where: [filters as any, ...buildSearchFilter(search, fields?.split(','))],
     take: limit,
     skip: (page - 1) * limit,
     relations,

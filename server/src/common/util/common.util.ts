@@ -23,18 +23,15 @@ export function mergePermissions(user: User): IUserFlattenedPermissions {
 }
 
 export const mapFieldsToSearchFilters = (search: string, fields: string[]) => {
-  return fields.reduce((acc, field) => {
+  return fields.map((field) => {
     const [relation, subField] = field.split('.');
 
     if (subField) {
-      acc[relation] = acc[relation] || {};
-      acc[relation][subField] = ILike(`%${search}%`);
+      return { [relation]: { [subField]: ILike(`%${search}%`) } };
     } else {
-      acc[field] = ILike(`%${search}%`);
+      return { [field]: ILike(`%${search}%`) };
     }
-
-    return acc;
-  }, {});
+  });
 };
 
 const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'; // Uppercase and digits only

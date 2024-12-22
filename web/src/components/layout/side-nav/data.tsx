@@ -23,6 +23,7 @@ export const sidebarConfig: Record<string, NavItem[]> = {
       label: "User Management",
       route: "/admin/users",
       icon: "UserRound",
+      permissions: [Permissions.EMPLOYEES_LIST],
       children: [
         {
           label: "Customeres",
@@ -31,8 +32,9 @@ export const sidebarConfig: Record<string, NavItem[]> = {
         },
         {
           label: "Employees",
-          route: "/admin/users/Employees",
+          route: "/admin/users/employees",
           icon: "Dot",
+          permissions: [Permissions.EMPLOYEES_LIST],
         },
       ],
     },
