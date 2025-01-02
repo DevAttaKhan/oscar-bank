@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
 "use client";
-import React, { ChangeEvent, forwardRef, useState } from "react";
+import React, { forwardRef, useState } from "react";
 import cn from "classnames";
 import { Lucide } from "../common";
 

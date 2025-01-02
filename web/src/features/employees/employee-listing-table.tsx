@@ -129,7 +129,7 @@ export const EmployeeListingTable: React.FC<Props> = ({ data, meta }) => {
           )}
           <Can I="create" a="employees">
             <Link
-              href={`/admin/branches/create`}
+              href={`/admin/users/employees/upsert`}
               className="p-2 border rounded hover:bg-slate-100"
             >
               <Lucide name="Plus" size={16} />

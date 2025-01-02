@@ -7,6 +7,10 @@
   --foreground: #171717;
 }
 
+.rdp-root {
+  --rdp-day_button-width: 15px !important;
+  --rdp-day_button-height: 15px !important;
+}
 /* Table Container */
 .table-container {
   @apply p-4 bg-gray-50 rounded-lg shadow-md;
@@ -46,6 +50,10 @@ tbody td {
   -webkit-mask-composite: source-out;
   mask-composite: subtract;
   animation: l3 1s infinite linear;
+}
+
+.rdp-root table > * {
+  font-size: 14px !important;
 }
 @keyframes l3 {
   to {

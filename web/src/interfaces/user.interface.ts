@@ -61,6 +61,13 @@ export enum UserType {
   ADMIN = "ADMIN",
 }
 
+export enum UserStatus {
+  ACTIVE = "Active",
+  INACTIVE = "Inactive",
+  SUSPENDED = "Suspended",
+  DELETED = "Deleted",
+}
+
 export enum Permissions {
   // Users
   USERS_CREATE = "users:create",

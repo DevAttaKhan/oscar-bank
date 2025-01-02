@@ -1,3 +1,5 @@
+import { Option } from "@/interfaces/types";
+
 export function areArraysEqual(array1?: number[], array2?: number[]) {
   if (!array1 || !array2) return;
   if (array1?.length !== array2?.length) {
@@ -11,4 +13,16 @@ export function areArraysEqual(array1?: number[], array2?: number[]) {
   }
 
   return true;
+}
+
+export function transformEnumToOption(enumObj) {
+  return enumObj
+    ? Object.values(enumObj).map(
+        (el) =>
+          ({
+            label: el,
+            value: el,
+          } as Option)
+      )
+    : [];
 }

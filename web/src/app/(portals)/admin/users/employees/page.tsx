@@ -1,6 +1,6 @@
 import { IApiError, IApiResponse } from "@/interfaces/types";
 import { auth } from "@/auth";
-import { EmployeeService } from "@/services/bemployee.service";
+import { EmployeeService } from "@/services/employee.service";
 import { EmployeeListingTable } from "@/features/employees/employee-listing-table";
 import { IEmployee } from "@/interfaces/employee.interface";
 

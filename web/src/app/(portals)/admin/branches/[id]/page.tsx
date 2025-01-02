@@ -1,6 +1,6 @@
 import { CreateBranchForm } from "@/features/branches";
 
-const CreateBranchPage = async ({ params }) => {
+const CreateBranchPage = async () => {
   return (
     <>
       <CreateBranchForm />

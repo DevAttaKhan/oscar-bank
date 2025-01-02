@@ -1,12 +1,12 @@
 import { apiService } from "./api.service";
-import { CreateBranchInputType } from "@/lib/schema/branches.schema";
 import { IApiError, IApiResponse } from "@/interfaces/types";
 
 import { RequestConfig } from "@/interfaces/api.interface";
 import { IEmployee } from "@/interfaces/employee.interface";
+import { CreateEmployeeSchemaInput } from "@/lib/schema/employee.schema";
 export class EmployeeService {
-  public static async createBranch(
-    payload: CreateBranchInputType,
+  public static async create(
+    payload: CreateEmployeeSchemaInput,
     token?: string
   ): Promise<IApiResponse<IEmployee> | IApiError> {
     try {
