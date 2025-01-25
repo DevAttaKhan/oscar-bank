@@ -13,6 +13,7 @@ import { GroupsModule } from './groups/groups.module';
 import { PermissionsModule } from './permissions/permissions.module';
 import { DesignationModule } from './designation/designation.module';
 import { EmployeesModule } from './employees/employees.module';
+import { MailingModule } from './mailing/mailing.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { EmployeesModule } from './employees/employees.module';
     PermissionsModule,
     DesignationModule,
     EmployeesModule,
+    MailingModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_FILTER, useClass: HttpExceptionFilter }],
